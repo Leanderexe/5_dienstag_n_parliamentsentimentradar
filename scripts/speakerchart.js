@@ -1,6 +1,6 @@
-var ctx2=document.getElementById("sentimentschart");
-var senChart = new Chart(ctx2, {
-     type: 'radar',
+var ctx2=document.getElementById("speakerchart");
+var myChart = new Chart(ctx2, {
+     type: 'bar',
      data: {
          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
          datasets: [{
@@ -24,6 +24,27 @@ var senChart = new Chart(ctx2, {
              ],
              borderWidth: 1
          }]
+     },
+     tooltips: {
+           backgroundColor: "rgb(255,255,255)",
+           bodyFontColor: "#858796",
+           titleMarginBottom: 10,
+           titleFontColor: '#6e707e',
+           titleFontSize: 14,
+           borderColor: '#dddfeb',
+           borderWidth: 1,
+           xPadding: 15,
+           yPadding: 15,
+           displayColors: false,
+           intersect: false,
+           mode: 'index',
+           caretPadding: 10,
+           callbacks: {
+             label: function(tooltipItem, chart) {
+               var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+               return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+             }
+           }
      },
 
  });
