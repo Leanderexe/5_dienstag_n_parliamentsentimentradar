@@ -1,0 +1,6 @@
+remote_host = prg2021.texttechnologylab.org
+remote_database = PRG_WiSe21_Gruppe_5_1
+remote_user = PRG_WiSe21_Gruppe_5_1
+remote_password = hUSANarm
+remote_port = 27020
+remote_collection = speeches
