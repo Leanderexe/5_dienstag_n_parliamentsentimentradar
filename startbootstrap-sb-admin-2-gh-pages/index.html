@@ -65,6 +65,18 @@
                                     <div class="chart-area">
                                         <canvas id="tokenchart"></canvas>
                                     </div>
+                                    <div>
+                                        <span id="s" style="padding-left:2px">Start:</span>
+                                        <input oninput="updateStart(this)" type="range" id="start" min="0" max="11">
+                                        <span id="starttime">Jun</span>
+                                    </div>
+                                    <div>
+                                        <span id="e" style="padding-left:2px">Ende:</span>
+                                        <input oninput="updateEnd(this)" type="range" id="end" min="0" max="11">
+                                        <span id="endtime">Jun</span>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>

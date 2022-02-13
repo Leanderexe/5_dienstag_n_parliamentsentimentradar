@@ -1,3 +1,13 @@
+dat=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function updateStart(range){
+console.log(range.value);
+document.getElementById("starttime").innerHTML=dat[range.value];
+};
+function updateEnd(range){
+console.log(range.value);
+document.getElementById("endtime").innerHTML=dat[range.value];
+};
+
 var ctx = document.getElementById("tokenchart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
