@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Übersicht</title>
+    <title id="dashname">Übersicht</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -36,6 +36,13 @@
             <div id="content">
 
                 <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <input type="text" placeholder="Datum eingeben..." oninput="updateVal(this)">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-success" id="newdash">Nach vorgegebenen Daten filtern</button>
+
+                </nav>
+
 
                 <!-- End of Topbar -->
 
@@ -340,6 +347,7 @@
     <script src="/scripts/tokenchart.js"></script>
     <script src="/scripts/poschart.js"></script>
     <script src="/scripts/sentimentschart.js"></script>
+    <script src="/scripts/filterspec.js"></script>
     <script src="/scripts/namedentchart.js"></script>
     <script src="/scripts/speakerchart.js"></script>
 </body>
