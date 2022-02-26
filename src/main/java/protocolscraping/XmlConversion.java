@@ -85,12 +85,9 @@ public class XmlConversion {
         //Here we are getting the xml-URLs by xml-ID
         Map<String, Map<String,String>> datas = parseXmlUrl(endPointIds);
 
-        System.out.println(datas);
-        System.out.println("HALLO");
 
-        //databaseOperation.deleteCollection("dbtplenarprotokoll");
-        //xmlToBsonDocument(datas);
-        /*
+        xmlToBsonDocument(datas);
+
         try {
             extractSpeech(datas);
         } catch (ParserConfigurationException e) {
@@ -103,7 +100,7 @@ public class XmlConversion {
             e.printStackTrace();
         }
 
-         */
+
 
 
     }
