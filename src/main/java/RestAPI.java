@@ -287,7 +287,63 @@ public class RestAPI {
             return rednerlist;
         }, util.json());
 
+
+
+        /**
+         * Prints out JSON with all named entities at http://localhost:4567/rede
+         * Exercise b4)
+         * @return String with the all named entities in JSON.
+         */
+        get("/rede", (request, response) -> {
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("speeches")){
+                rednerlist.add(doc);
+            }
+            return rednerlist;
+        }, util.json());
+
+
+        /**
+         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/rede/content/:searchstr
+         * @return String with redner which contain the search parameter in JSON.
+         */
+        get("/rede/content/:searchstr", (request, response) -> {
+            String searchstr = request.params(":searchstr");
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("speeches")){
+                ArrayList contentlist = (ArrayList) doc.get("content");
+                for (int i = 0; i < contentlist.size(); i++) {
+                    String content = (String) contentlist.get(i);
+                    if (content.contains(searchstr)) {
+                        rednerlist.add(doc);
+                        break;
+                    }
+                }
+            }
+            return rednerlist;
+        }, util.json());
+
+
+        /**
+         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/rede/redeid/:searchstr
+         * @return String with redner which contain the search parameter in JSON.
+         */
+        get("/rede/redeid/:searchstr", (request, response) -> {
+            String searchstr = request.params(":searchstr");
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("speeches")){
+                String redeID =  (String) doc.get("redeID");
+                    if (redeID.contains(searchstr)) {
+                        rednerlist.add(doc);
+                        break;
+                    }
+                }
+            return rednerlist;
+        }, util.json());
     }
+
+
+
 
     private static String getJson(List key, List value) {
         String json = "";
