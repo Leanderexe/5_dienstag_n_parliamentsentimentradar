@@ -5,7 +5,6 @@ import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
-import protocolscraping.XmlConversion;
 import spark.Filter;
 
 
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 //import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 
 import static spark.Spark.*;
@@ -28,7 +26,7 @@ public class RestAPI {
     JSONParser parser = new JSONParser();
     public static void main(String[] args) throws IOException, JSONException, UIMAException {
         Pipeline pip = new Pipeline();
-        pip.generate_jCAS_top(); // generates the JCas objects.
+        //pip.generatejCAStop(); // generates the JCas objects.
         // String[] redner = {"angela Merkel", "Putin", "Markon", "Lauterbach", "Amthor", "trump", "sleepy joe"};
         List key = new ArrayList();
         List value = new ArrayList();
@@ -131,8 +129,8 @@ public class RestAPI {
             String searchstr = request.params(":searchstr");
             List rednerlist = new ArrayList();
             for(Document doc: db.findAllDocument("redner")){
-                String redner = (String) doc.get("_id");
-                if (redner.contains(searchstr)){
+                Integer redner = (Integer) doc.get("_id");
+                if (redner.toString().contains(searchstr)){
                     rednerlist.add(doc);
                 }
             }

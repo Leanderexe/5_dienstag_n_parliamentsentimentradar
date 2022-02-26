@@ -16,7 +16,7 @@ import static com.mongodb.client.model.Filters.eq;
  *
  * Database actions are defined in this class and are determined in interface {@link Operation}
  * @author Manuel Aha and Leander Hermanns
- * @modified Leander Hermanns, Manuel Aha
+ * @modified Leander Hermanns
  *
  */
 public class DatabaseOperation implements Operation {
@@ -24,6 +24,7 @@ public class DatabaseOperation implements Operation {
     /*
     * database collection columns and keys
     * */
+    public static final String REDNER_COLLECTION_NAME = "redner";
     public static final String SURNAME_COL_KEY = "nachname";
     public static final String FRAKTION_COL_KEY = "fraktion";
     public static final String VORNAME_COL_KEY = "vorname";
@@ -119,60 +120,33 @@ public class DatabaseOperation implements Operation {
         return mongoDBConnectionHandler.getDatabase().getCollection("speeches").find();
     }
 
-    /**
-     * Inserts a list of documents into the given collection
-     * @param collectionName name of the collection
-     * @param docList list of documents
-     * @author Manuel Aha
-     */
     @Override
     public void insertAll(String collectionName, List<Document> docList) {
         mongoDBConnectionHandler.getDatabase().getCollection(collectionName).insertMany(docList);
         System.out.println("Documents inserted successfully in database");
     }
 
-    /**
-     * Inserts a single document into the collection
-     * @param collection target collection
-     * @param document
-     * @author Manuel Aha
-     */
     @Override
     public void insertOneDocument(String collection, Document document) {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).insertOne(document);
         System.out.println("Document inserted successfully in database");
     }
-    /**
+    /*
      * Find a document by key and value from a collection
-     * @param collection target collection
-     * @param key the key signature with which the information is stored
-     * @param value the value of the key
-     * @return the desired data
-     * @author Manuel Aha
-     */
+     * */
     @Override
     public Document findDocument(String collection, String key, String value) {
         return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(key, value)).first();
     }
 
-    /**
-     * Finding the document through a given ID
-     * @param collection
-     * @param id
-     * @return the desired document
-     * @author Manuel Aha
-     */
     @Override
     public Document findDocumentById(String collection, Integer id) {
         return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(ID_COL_KEY, id)).first();
     }
 
-    /**
-     * For testing cases a listing of all existing collections
-     * @author Manuel Aha
-     */
     @Override
     public void printAllCollections() {
+
         MongoIterable<String> list = mongoDBConnectionHandler.getDatabase().listCollectionNames();
 
         System.out.println("\n=============List of collections===============\n");
@@ -182,24 +156,12 @@ public class DatabaseOperation implements Operation {
         }
     }
 
-    /**
-     * Deletes a collection in database
-     * @param collection will be deleted
-     * @author Manuel Aha
-     */
     @Override
     public void deleteCollection(String collection) {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).drop();
         System.out.println(collection + " deleted successfully!");
     }
 
-    /**
-     * Deletes a certain document in the collection
-     * @param collection
-     * @param key
-     * @param value
-     * @author Manuel Aha
-     */
     @Override
     public void deleteDocument(String collection, String key, String value) {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).deleteOne(Filters.eq(key, value));
