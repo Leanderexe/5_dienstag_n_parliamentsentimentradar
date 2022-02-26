@@ -9,10 +9,10 @@ xhr5.onreadystatechange = function() {
             var spc5=JSON.parse(this.responseText);
             console.log(spc5);
             for(let i=0;i<spc5.length;i++){
-                plab.push(spc5[i].POS);
-                pdat.push(spc5[i].Häufigkeit);
-                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
-                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');
+                nlab.push(spc5[i].POS);
+                ndat.push(spc5[i].Häufigkeit);
+                nbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                nboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');
             }
 
        }

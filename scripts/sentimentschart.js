@@ -9,7 +9,7 @@ xhr4.onreadystatechange = function() {
             var spc4=JSON.parse(this.responseText);
             console.log(spc4);
             for(let i=0;i<spc4.length;i++){
-                slab.push(spc4[i].Sentiment);
+                slab.push(spc4[i].sentiment);
                 sdat.push(spc4[i].Häufigkeit);
                 sbc.push('rgba(42, 202, 0, 0.2)');
                 sboc.push('rgba(42, 202, 0, 1)');
@@ -25,7 +25,7 @@ var senChart = new Chart(ctx2, {
      data: {
          labels: slab,
          datasets: [{
-             label: '# of Votes',
+             label: 'Häufigkeit',
              data: sdat,
              backgroundColor: sbc,
              borderColor: sboc,
