@@ -1,27 +1,34 @@
+plab=[];
+pdat=[];
+pbc=[];
+pboc=[];
+var xhr3 = new XMLHttpRequest();
+xhr3.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc3=JSON.parse(this.responseText);
+            console.log(spc3);
+            for(let i=0;i<spc3.length;i++){
+                plab.push(spc3[i].POS);
+                pdat.push(spc3[i].Häufigkeit);
+                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');
+            }
+
+       }
+    };
+xhr3.open("GET", "http://localhost:4567/pos", true);
+xhr3.send();
 var ctx2=document.getElementById("poschart");
 var myChart = new Chart(ctx2, {
      type: 'horizontalBar',
      data: {
-         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+         labels: plab,
          datasets: [{
-             label: '# of Votes',
-             data: [12, 19, 3, 5, 3, 3],
-             backgroundColor: [
-                 'rgba(255, 99, 132, 0.2)',
-                 'rgba(54, 162, 235, 0.2)',
-                 'rgba(255, 206, 86, 0.2)',
-                 'rgba(75, 192, 192, 0.2)',
-                 'rgba(153, 102, 255, 0.2)',
-                 'rgba(255, 159, 64, 0.2)'
-             ],
-             borderColor: [
-                 'rgba(255, 99, 132, 1)',
-                 'rgba(54, 162, 235, 1)',
-                 'rgba(255, 206, 86, 1)',
-                 'rgba(75, 192, 192, 1)',
-                 'rgba(153, 102, 255, 1)',
-                 'rgba(255, 159, 64, 1)'
-             ],
+             label: 'Häufigkeit',
+             data: pdat,
+             backgroundColor: pbc,
+             borderColor: pboc,
              borderWidth: 1
          }]
      },

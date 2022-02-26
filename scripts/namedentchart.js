@@ -1,3 +1,24 @@
+nlab=[];
+ndat=[];
+nbc=[];
+nboc=[];
+var xhr5 = new XMLHttpRequest();
+xhr5.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc5=JSON.parse(this.responseText);
+            console.log(spc5);
+            for(let i=0;i<spc5.length;i++){
+                plab.push(spc5[i].POS);
+                pdat.push(spc5[i].Häufigkeit);
+                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');
+            }
+
+       }
+    };
+xhr5.open("GET", "http://localhost:4567/namedentitiesobjects", true);
+xhr5.send();
 var ctx = document.getElementById("namedentchart");
 var neChart = new Chart(ctx, {
   type: 'line',

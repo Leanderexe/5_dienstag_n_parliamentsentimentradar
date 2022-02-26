@@ -1,3 +1,24 @@
+rlab=[];
+rdat=[];
+rbc=[];
+rboc=[];
+var xhr6 = new XMLHttpRequest();
+xhr6.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc6=JSON.parse(this.responseText);
+            console.log(spc6);
+            for(let i=0;i<spc6.length;i++){
+                /*plab.push(spc5[i].POS);
+                pdat.push(spc5[i].Häufigkeit);
+                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');*/
+            }
+
+       }
+    };
+xhr6.open("GET", "http://localhost:4567/redner", true);
+xhr6.send();
 var ctx2=document.getElementById("speakerchart");
 var myChart = new Chart(ctx2, {
      type: 'bar',
