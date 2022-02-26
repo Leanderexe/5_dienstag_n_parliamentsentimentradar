@@ -2,21 +2,27 @@ package database;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.ListCollectionsIterable;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
+
+/**
+ *
+ * Database actions are defined in this class and are determined in interface {@link Operation}
+ * @author Manuel Aha and Leander Hermanns
+ * @modified Leander Hermanns
+ *
+ */
 public class DatabaseOperation implements Operation {
     private final MongoDBConnectionHandler mongoDBConnectionHandler;
     /*
-    * Redner collection columns
+    * database collection columns and keys
     * */
     public static final String REDNER_COLLECTION_NAME = "redner";
     public static final String SURNAME_COL_KEY = "nachname";
@@ -28,14 +34,22 @@ public class DatabaseOperation implements Operation {
     public static final String REDNER_KEY = "redner";
     public static final String PROTOKOL_KEY = "dbtplenarprotokoll";
 
-
-
     private static DatabaseOperation databaseOperation;
 
+
+    /**
+     * With creating the DatabaseOperation class we connect to the database {@link MongoDBConnectionHandler}
+     * @author Manuel Aha
+     */
     public DatabaseOperation() {
         mongoDBConnectionHandler = new MongoDBConnectionHandler();
     }
 
+    /**
+     * Creating instance
+     * @author Manuel Aha
+     * @return Generated DatabaseOperation class
+     */
     public static DatabaseOperation build() {
         if (databaseOperation == null) {
             databaseOperation = new DatabaseOperation();
@@ -43,13 +57,22 @@ public class DatabaseOperation implements Operation {
         return databaseOperation;
     }
 
+    /**
+     * Checks if collection already exists in database
+     * @param collectionName name of the collection to be checked
+     * @return Result of the checking in Boolean
+     * @author Manuel Aha
+     */
     @Override
     public Boolean exists(String collectionName) {
         return mongoDBConnectionHandler.getDatabase().listCollectionNames().into(new ArrayList<String>()).contains(collectionName);
     }
-    /*
-    * Find all documents from database
-    * */
+
+    /**
+     * Looking for all collections
+     * @return List of collections
+     * @author Manuel Aha
+     */
     @Override
     public List<Document> findAll() {
         List<Document> collectionList = new ArrayList<>();
@@ -60,15 +83,23 @@ public class DatabaseOperation implements Operation {
         return collectionList;
     }
 
+    /**
+     * Creating a new collection
+     * @param collectionName is the name of the new collection
+     * @author Manuel Aha
+     */
     @Override
     public void createNewCollection(String collectionName) {
         mongoDBConnectionHandler.getDatabase().createCollection(collectionName);
         System.out.println("Collection is created successfully");
     }
 
-    /*
-    * Read all documents from a collection
-    * */
+    /**
+     * gets all documents of the collection
+     * @param collectionName is the name of the target collection
+     * @return collectionList
+     * @author Manuel Aha
+     */
     @Override
     public List<Document> findAllDocument(String collectionName) {
         List<Document> collectionList = new ArrayList<>();
@@ -79,9 +110,14 @@ public class DatabaseOperation implements Operation {
         return collectionList;
     }
 
-
-    public FindIterable<Document> get_document_rede(String collectionName) {
-        return mongoDBConnectionHandler.getDatabase().getCollection(collectionName).find();
+    /**
+     * Extracts documents explicitly for speeches collection
+     * @return
+     * @author Leander Hermanns
+     * @modified Manuel Aha
+     */
+    public FindIterable<Document> getDocumentSpeech() {
+        return mongoDBConnectionHandler.getDatabase().getCollection("speeches").find();
     }
 
     @Override

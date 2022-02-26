@@ -36,7 +36,7 @@ public class Pipeline {
         aggregateBuilder.add(createEngineDescription(GerVaderSentiment.class, GerVaderSentiment.PARAM_REST_ENDPOINT, "http://gervader.prg2021.texttechnologylab.org" , GerVaderSentiment.PARAM_SELECTION, "text,de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"));
         AnalysisEngine pipeline = aggregateBuilder.createAggregate();
         org.bson.Document doc = null;
-        MongoCursor<Document> cursor = db.get_document_rede("speeches").iterator();
+        MongoCursor<Document> cursor = db.getDocumentSpeech().iterator();
         //System.out.println(cursor);
         Scanner Sitz = new Scanner(System.in);
         System.out.println('\n');
