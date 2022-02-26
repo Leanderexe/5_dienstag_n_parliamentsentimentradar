@@ -17,23 +17,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Rede_MongoDB {
+/**
+ * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2 copied and reworked from my own Uebung2.
+ * The class holds methods that can analyse the JCas objects for the different NLP methods.
+ * @author Leander Hermanns
+ */
+public class redeMongoDB {
     Document doc;
     List Cas = new ArrayList();
 
 
     /**
+     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2 copied and reworked from my own Uebung2.
      * set the attribute document from mongodb.
      * @param mongodb
+     * @author Leander Hermanns
      */
-    public Rede_MongoDB(Document mongodb){
+    public redeMongoDB(Document mongodb){
         doc = mongodb;
     }
 
     /**
-     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2_2020 copied and reworked from my own Uebung2 project from last year.
+     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2_2020 copied and reworked from my own Uebung2.
      * create a JCas Object of a document from the collection Tagesordnungspunkt for every speech.
      * @return JCas
+     * @author Leander Hermanns
      */
     public JCas toCAS() {
         JCas jCAS = null;
@@ -51,12 +59,12 @@ public class Rede_MongoDB {
     }
 
     /**
-     * builds up thew pipeline between the Analysis Engine and the JCas object.
-     * @return true if document was created in MongoDB collection, false if not
+     * builds up the pipeline between the Analysis Engine and the JCas object.
      * @param jcas
      * @param pipeline
+     * @author Leander Hermanns
      */
-    public void build_pipeline(JCas jcas, AnalysisEngine pipeline){
+    public void buildPipeline(JCas jcas, AnalysisEngine pipeline){
         try {
             System.out.println('\n');
             SimplePipeline.runPipeline(jcas, pipeline);
@@ -70,9 +78,11 @@ public class Rede_MongoDB {
     /**
      * caluates and sorts all used tokens by how much they were used and prints it out.
      * @param jcas_list
-     * @return
+     * @return map with all analysed Tokens and the number of appearances.
+     * @author Leander Hermanns
      */
-    public Map<String, Integer> print_token(List<JCas> jcas_list){
+    public Map<String, Integer> printToken(List<JCas> jcas_list){
+        Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (Token token : JCasUtil.select(jcas_list.get(k), Token.class)) {
@@ -101,21 +111,23 @@ public class Rede_MongoDB {
             removed_key.clear();
             for (String key: map.keySet()){
                 if (map.get(key).equals(i)){
+                    sortedmap.put(key, map.get(key));
                     System.out.println("Token: '" + key + "'        Anzahl an Einträgen: " + map.get(key));
                     removed_key.add(key);
                 }
             }
         }
-        return map;
+        return sortedmap;
     }
 
     /**
      * caluates and sorts all used named entities by how much they were used and prints it out.
      * @param jcas_list
-     * @return
+     * @return map with all analysed named entities by Location, Organisation, MISC, Person and the number of appearances.
+     * @author Leander Hermanns
      */
-    public Map<String, Integer> print_named_entities(List<JCas> jcas_list){
-
+    public Map<String, Integer> printNamedEntities(List<JCas> jcas_list){
+        Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
@@ -140,8 +152,31 @@ public class Rede_MongoDB {
             removed_key.clear();
             for (String key: map.keySet()){
                 if (map.get(key).equals(i)){
+                    sortedmap.put(key, map.get(key));
                     System.out.println("Typ: '" + key + "'        Anzahl an Einträgen: " + map.get(key));
                     removed_key.add(key);
+                }
+            }
+        }
+        return sortedmap;
+    }
+
+    /**
+     * caluates and sorts all used named entities objects by how much they were used and prints it out.
+     * @param jcas_list
+     * @return map with all analysed named entities and the number of appearances.
+     * @author Leander Hermanns
+     */
+    public Map<String, Integer> printNamedEntitiesobjects(List<JCas> jcas_list){
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        for (int k = 0; k < jcas_list.size(); k++) {
+            for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
+                System.out.println(entity.getCoveredText() + " " + map);
+                if (map.containsKey(entity.getCoveredText())) {
+                    System.out.println(entity.getValue() + " " + entity.getCoveredText());
+                    map.replace(entity.getCoveredText(), map.get(entity.getCoveredText()), map.get(entity.getCoveredText()) + 1);
+                } else {
+                    map.put(entity.getCoveredText(), 1);
                 }
             }
         }
@@ -151,9 +186,11 @@ public class Rede_MongoDB {
     /**
      * caluates and sorts all used Part of Speeches by how much they were used and prints it out.
      * @param jcas_list
-     * @return
+     * @return map with all analysed POS and the number of appearances.
+     * @author Leander Hermanns
      */
-    public Map<String, Integer> print_pos(List<JCas> jcas_list) {
+    public Map<String, Integer> printPos(List<JCas> jcas_list) {
+        Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (Token token : JCasUtil.select(jcas_list.get(k), Token.class)) {
@@ -183,140 +220,75 @@ public class Rede_MongoDB {
             removed_key.clear();
             for (String key: map.keySet()){
                 if (map.get(key).equals(i)){
+                    sortedmap.put(key, map.get(key));
                     System.out.println("Wortart: '" + key + "'        Häufigkeit: " + map.get(key));
                     removed_key.add(key);
                 }
             }
         }
         System.out.println(maphelper);
-        return maphelper;
+        return sortedmap;
     }
 
-
-    /**
-     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2_2020 copied and reworked from my own Uebung2 project from last year.
-     * create a JCas Object of a document from the collection Rede for every Comment.
-     * @return JCas
-     */
-    public JCas toCAS_rede() {
-        JCas jCAS = null;
-        try {
-            Object tag = doc.get("Kommentare");
-            jCAS = JCasFactory.createText(tag.toString(), "de");
-
-        } catch (UIMAException e) {
-            System.out.println("Oops! Something went terribly wrong: Strange UIMAException ... ");
-        }
-        return jCAS;
-    }
 
 
     /**
      * caluates and sorts every speech by the sentiment of all the comments made during that speech and prints it out.
      * @param jcas_list
-     *@param rede_ID
+     * @return map with all analysed Sentiments and the number of appearances.
+     * @author Leander Hermanns
+     * @modified Manuel Aha
      */
-    public void print_rede(List<JCas> jcas_list,List rede_ID){
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        Map<String, Integer> map_good = new HashMap<String, Integer>();
-        Map<String, Integer> map_bad = new HashMap<String, Integer>();
-        Map<String, Integer> map_neutral = new HashMap<String, Integer>();
+    public Map<Double, Integer> printSentiment(List<JCas> jcas_list){
+        Map<Double, Integer> map = new HashMap<>();
         for (int k = 0; k < jcas_list.size(); k++) {
-            int good  = 0;
-            int bad = 0;
-            int neutral = 0;
             for (Sentence sentence : JCasUtil.select(jcas_list.get(k), Sentence.class)) {
                 for (Sentiment sentiment : JCasUtil.selectCovered(Sentiment.class, sentence)) {
                     //System.out.println(sentence.getCoveredText() + "  " + sentiment.getSentiment() + " " + k);
-                    if (sentiment.getSentiment() < 0.00){
-                        bad += 1;
-                    }
-                    if (sentiment.getSentiment() == 0.00){
-                        if (sentence.getCoveredText().equals("[]")){
-                        }
-                        else if (sentence.getCoveredText().equals("]")){
-                        }
-                        else {
-                            neutral += 1;
-                        }
-                    }
-                    if (sentiment.getSentiment() > 0.00){
-                        good += 1;
+                    if (map.containsKey(sentiment.getSentiment())) {
+                        map.replace(sentiment.getSentiment(), map.get(sentiment.getSentiment()), map.get(sentiment.getSentiment()) + 1);
+                    } else {
+                        map.put(sentiment.getSentiment(), 1);
+
                     }
                 }
             }
-            map_good.put((String) rede_ID.get(k), good);
-            map_bad.put((String) rede_ID.get(k), bad);
-            map_neutral.put((String) rede_ID.get(k), neutral);
             }
+        return map;
+    }
 
-        // Calculate Listings of the Speeches with the most positiv sentiments.
-        Integer highest_val_good = 0;
-        for (Integer value: map_good.values()){
-            if (value > highest_val_good) {
-                highest_val_good = value;
-            }
-        }
 
-        List<String>  removed_key_good = new ArrayList();
-        System.out.println('\n' + ">>>>>>>>>>>>>>>>> Auflistung der Reden nach den meisten positiven Zurufen absteigend sortiert.  <<<<<<<<<<<<<<<<<");
-        for (int i = highest_val_good; i >= 0; i--){
-            removed_key_good.clear();
-            for (String key: map_good.keySet()){
-                if (map_good.get(key).equals(i)){
-                    System.out.println("Rede ID: '" + key + "'        Häufigkeit: " + map_good.get(key));
-                    removed_key_good.add(key);
-                }
-            }
-            for (String key: removed_key_good){
-                map_good.remove(key);
+    /**
+     * caluates and sorts every speech by the named entities by Location, Organisation, MISC, Person of all the comments made during that speech and prints it out.
+     * @param jcas_list
+     * @return list with all analysed named entities by Location, Organisation, MISC, Person by their appearance.
+     * @author Leander Hermanns
+     * @modified Manuel Aha
+     */
+    public List getNamedEntities(List<JCas> jcas_list) {
+        List list = new ArrayList();
+        for (int k = 0; k < jcas_list.size(); k++) {
+            for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
+                list.add(entity.getValue());
             }
         }
+        return list;
+    }
 
-        // Calculate Listings of the Speeches with the most neutral sentiments.
-        Integer highest_val_neutral = 0;
-        for (Integer value: map_neutral.values()){
-            if (value > highest_val_neutral) {
-                highest_val_neutral = value;
+    /**
+     * caluates and sorts every speech by the named entities of all the comments made during that speech and prints it out.
+     * @param jcas_list
+     * @return list with all analysed named entities by their appearance.
+     * @author Leander Hermanns
+     * @modified Manuel Aha
+     */
+    public List getNamedEntitiesObjects(List<JCas> jcas_list) {
+        List list = new ArrayList();
+        for (int k = 0; k < jcas_list.size(); k++) {
+            for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
+                list.add(entity.getCoveredText());
             }
         }
-
-        List<String>  removed_key_neutral = new ArrayList();
-        System.out.println('\n' + ">>>>>>>>>>>>>>>>> Auflistung der Reden nach den meisten neutral Zurufen absteigend sortiert.  <<<<<<<<<<<<<<<<<");
-        for (int i = highest_val_neutral; i >= 0; i--){
-            removed_key_neutral.clear();
-            for (String key: map_neutral.keySet()){
-                if (map_neutral.get(key).equals(i)){
-                    System.out.println("Rede ID: '" + key + "'        Häufigkeit: " + map_neutral.get(key));
-                    removed_key_neutral.add(key);
-                }
-            }
-            for (String key: removed_key_neutral){
-                map_neutral.remove(key);
-            }
-        }
-
-        // Calculate Listings of the Speeches with the most negativ sentiments.
-        Integer highest_val_bad = 0;
-        for (Integer value: map_bad.values()){
-            if (value > highest_val_bad) {
-                highest_val_bad = value;
-            }
-        }
-        //System.out.println(map_bad);
-        List<String>  removed_key_bad = new ArrayList();
-        System.out.println('\n' + ">>>>>>>>>>>>>>>>> Auflistung der Reden nach den meisten negativen Zurufen absteigend sortiert.  <<<<<<<<<<<<<<<<<");
-        for (int i = highest_val_bad; i >= 0; i--){
-            removed_key_bad.clear();
-            for (String key: map_bad.keySet()){
-                if (map_bad.get(key).equals(i)){
-                    System.out.println("Rede ID: '" + key + "'        Häufigkeit: " + map_bad.get(key));
-                    removed_key_bad.add(key);
-                }
-            }
-            for (String key: removed_key_bad){
-                map_bad.remove(key);
-            }
-        }
+        return list;
     }
 }

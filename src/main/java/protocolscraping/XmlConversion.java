@@ -1,7 +1,9 @@
 package protocolscraping;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -13,8 +15,13 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import NLP.Pipeline;
+import NLP.redeMongoDB;
 import database.DatabaseOperation;
 import entity.Speech;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
@@ -40,6 +47,8 @@ public class XmlConversion {
 
     private final String REDNER_LIST_KEY = "rednerliste";
     private final String REDNER_KEY = "redner";
+
+    public BufferedImage processedImage;
 
     private final String REDE_COLL_KEY = "speeches";
 
@@ -80,10 +89,9 @@ public class XmlConversion {
         //Here we are getting the xml-URLs by xml-ID
         Map<String, Map<String,String>> datas = parseXmlUrl(endPointIds);
 
-        System.out.println(datas);
-        System.out.println("HALLO");
 
-        /*
+        xmlToBsonDocument(datas);
+
         try {
             extractSpeech(datas);
         } catch (ParserConfigurationException e) {
@@ -92,13 +100,13 @@ public class XmlConversion {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
+        } catch (ResourceInitializationException e) {
+            e.printStackTrace();
         }
 
-         */
-
-
-        xmlToBsonDocument(datas);
     }
+
+
 
     private String getIdByXpath(String searchValue, String pageSource) {
         String id = "";
@@ -332,16 +340,51 @@ public class XmlConversion {
 
                 data.forEach(d -> {
                     try {
+                        //To avoid to be banned from requesting
+                        Thread.sleep(1200);
                         org.bson.Document speakerdoc = (org.bson.Document) d.get("name");
                         Integer id = (Integer) d.get("id");
+
+
+                        String vorname = speakerdoc.get(DatabaseOperation.VORNAME_COL_KEY).toString();
+                        String fraktion = speakerdoc.get(DatabaseOperation.FRAKTION_COL_KEY).toString();
+                        String nachname = speakerdoc.get(DatabaseOperation.SURNAME_COL_KEY).toString();
+
+
+                        PictureScrap picsy = new PictureScrap();
+                        String name = vorname + " " + nachname;
+                        System.out.println("JOOJOO" + name);
+                        Map<URL,BufferedImage> speakerImg = picsy.run(name);
+
+                        /*URL urlImage = new URL("");
+                        BufferedImage metaData;
+
+                        speakerImg.keySet().
+                        speakerImg.get()
+
+                        for(URL key : speakerImg.keySet()) {
+                            if (speakerImg.keySet().size() == 1) {
+                                urlImage = key;
+                                metaData = speakerImg.get(key);
+                            }
+
+                        }*/
+
+
+                        String strImg = speakerImg.toString();
+
 
                         /*
                         * Creating custom document for avoid duplicates
                         * */
                         org.bson.Document doc = new org.bson.Document(DatabaseOperation.ID_COL_KEY, id);
-                        doc.append(DatabaseOperation.VORNAME_COL_KEY, speakerdoc.get(DatabaseOperation.VORNAME_COL_KEY).toString());
-                        doc.append(DatabaseOperation.FRAKTION_COL_KEY, speakerdoc.get(DatabaseOperation.FRAKTION_COL_KEY).toString());
-                        doc.append(DatabaseOperation.SURNAME_COL_KEY, speakerdoc.get(DatabaseOperation.SURNAME_COL_KEY).toString());
+                        doc.append(DatabaseOperation.VORNAME_COL_KEY, vorname );
+                        doc.append(DatabaseOperation.FRAKTION_COL_KEY, fraktion);
+                        doc.append(DatabaseOperation.SURNAME_COL_KEY, nachname);
+                        doc.append(DatabaseOperation.REDNER_IMAGE, strImg);
+
+
+
 
                         /*
                         * Insert document in database
@@ -360,8 +403,8 @@ public class XmlConversion {
         }
     }
 
-    private void extractSpeech(Map<String, Map<String,String>> datas) throws ParserConfigurationException, IOException, SAXException {
-
+    private void extractSpeech(Map<String, Map<String,String>> datas) throws ParserConfigurationException, IOException, SAXException, ResourceInitializationException {
+        //databaseOperation.deleteCollection("speeches");
         for (Map.Entry<String, Map<String,String>> data : datas.entrySet()) {
 
             Map<String, String> xmlURL = data.getValue();
@@ -480,12 +523,29 @@ public class XmlConversion {
                                         Speech speech = new Speech(Datum, redner_id, rede_id, Speech_Liste, Kommentare_pro_rede);
                                         speech.printSpeech();
                                         //Speaker_list.add(speech);
+
                                         org.bson.Document bsonSpeech = new org.bson.Document(REDE_DATE_KEY, Datum);
                                         bsonSpeech.append(REDE_SPEAKER_KEY,redner_id);
                                         bsonSpeech.append(REDE_ID_KEY, rede_id);
                                         bsonSpeech.append(REDE_CONTENT_KEY, Speech_Liste);
                                         bsonSpeech.append(REDE_COMMENTS_KEY, Kommentare_pro_rede);
+                                        /*
+                                        Rede_MongoDB redenlp = new Rede_MongoDB(bsonSpeech);
+                                        Pipeline pip = new Pipeline();
+                                        JCas jcas = redenlp.toCAS();
+                                        List<JCas> jCasrede = new ArrayList<>();
+                                        jCasrede.add(jcas);
+                                        //System.out.println("hier bin ich" + jCasrede);
+                                        AnalysisEngine pipeline = pip.buildpipeline();
+                                        redenlp.build_pipeline(jcas,pipeline);
+                                        List mapnelist = redenlp.get_named_entities(jCasrede);
+                                        List mapneolist = redenlp.get_named_entities_objects(jCasrede);
 
+
+                                        bsonSpeech.append("named entities objects", mapneolist); // Added all named entities objects in the order they appear.
+                                        bsonSpeech.append("named entities", mapnelist);  // Added all named entities in the order they appear.
+
+                                         */
                                         databaseOperation.insertOneDocument(REDE_COLL_KEY, bsonSpeech);
                                     }
 
