@@ -1,9 +1,11 @@
+package API;
+
+import API.JsonUtil;
 import NLP.Pipeline;
 import database.DatabaseOperation;
 import org.apache.uima.UIMAException;
 import org.bson.Document;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import spark.Filter;
 
@@ -20,7 +22,7 @@ import java.util.List;
 import static spark.Spark.*;
 
 /**
- * Implements the RestAPI and defines the routes and parameters.
+ * Implements the API.RestAPI and defines the routes and parameters.
  * @author Leander Hermanns
  * @modified Manuel Aha
  */
