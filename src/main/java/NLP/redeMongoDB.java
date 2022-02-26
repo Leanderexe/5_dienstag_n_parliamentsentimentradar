@@ -17,21 +17,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Rede_MongoDB {
+public class redeMongoDB {
     Document doc;
     List Cas = new ArrayList();
 
 
     /**
+     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2 copied and reworked from my own Uebung2.
      * set the attribute document from mongodb.
      * @param mongodb
      */
-    public Rede_MongoDB(Document mongodb){
+    public redeMongoDB(Document mongodb){
         doc = mongodb;
     }
 
     /**
-     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2_2020 copied and reworked from my own Uebung2 project from last year.
+     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2_2020 copied and reworked from my own Uebung2.
      * create a JCas Object of a document from the collection Tagesordnungspunkt for every speech.
      * @return JCas
      */
@@ -56,7 +57,7 @@ public class Rede_MongoDB {
      * @param jcas
      * @param pipeline
      */
-    public void build_pipeline(JCas jcas, AnalysisEngine pipeline){
+    public void buildPipeline(JCas jcas, AnalysisEngine pipeline){
         try {
             System.out.println('\n');
             SimplePipeline.runPipeline(jcas, pipeline);
@@ -72,7 +73,7 @@ public class Rede_MongoDB {
      * @param jcas_list
      * @return
      */
-    public Map<String, Integer> print_token(List<JCas> jcas_list){
+    public Map<String, Integer> printToken(List<JCas> jcas_list){
         Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
@@ -116,7 +117,7 @@ public class Rede_MongoDB {
      * @param jcas_list
      * @return
      */
-    public Map<String, Integer> print_named_entities(List<JCas> jcas_list){
+    public Map<String, Integer> printNamedEntities(List<JCas> jcas_list){
         Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
@@ -151,7 +152,7 @@ public class Rede_MongoDB {
         return sortedmap;
     }
 
-    public Map<String, Integer> print_named_entitiesobjects(List<JCas> jcas_list){
+    public Map<String, Integer> printNamedEntitiesobjects(List<JCas> jcas_list){
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
@@ -172,7 +173,7 @@ public class Rede_MongoDB {
      * @param jcas_list
      * @return
      */
-    public Map<String, Integer> print_pos(List<JCas> jcas_list) {
+    public Map<String, Integer> printPos(List<JCas> jcas_list) {
         Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
@@ -236,7 +237,7 @@ public class Rede_MongoDB {
      * caluates and sorts every speech by the sentiment of all the comments made during that speech and prints it out.
      * @param jcas_list
      */
-    public Map<Double, Integer> print_sentiment(List<JCas> jcas_list){
+    public Map<Double, Integer> printSentiment(List<JCas> jcas_list){
         Map<Double, Integer> map = new HashMap<>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (Sentence sentence : JCasUtil.select(jcas_list.get(k), Sentence.class)) {
@@ -254,7 +255,7 @@ public class Rede_MongoDB {
         return map;
     }
 
-    public List get_named_entities(List<JCas> jcas_list) {
+    public List getNamedEntities(List<JCas> jcas_list) {
         List list = new ArrayList();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
@@ -264,7 +265,7 @@ public class Rede_MongoDB {
         return list;
     }
 
-    public List get_named_entities_objects(List<JCas> jcas_list) {
+    public List getNamedEntitiesObjects(List<JCas> jcas_list) {
         List list = new ArrayList();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {

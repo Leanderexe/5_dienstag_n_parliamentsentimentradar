@@ -14,7 +14,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import NLP.Pipeline;
-import NLP.Rede_MongoDB;
+import NLP.redeMongoDB;
 import database.DatabaseOperation;
 import entity.Speech;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -35,7 +35,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import scala.Int;
 
 public class XmlConversion {
 
@@ -90,6 +89,7 @@ public class XmlConversion {
 
         //databaseOperation.deleteCollection("dbtplenarprotokoll");
         //xmlToBsonDocument(datas);
+
         /*
         try {
             extractSpeech(datas);
@@ -104,6 +104,8 @@ public class XmlConversion {
         }
 
          */
+
+
 
 
     }
@@ -494,19 +496,23 @@ public class XmlConversion {
                                         bsonSpeech.append(REDE_ID_KEY, rede_id);
                                         bsonSpeech.append(REDE_CONTENT_KEY, Speech_Liste);
                                         bsonSpeech.append(REDE_COMMENTS_KEY, Kommentare_pro_rede);
-                                        Rede_MongoDB redenlp = new Rede_MongoDB(bsonSpeech);
+
+                                         /*// Reads in the speeches with the named entities takes about 18 hours to perform on the whole corpus.
+                                        redeMongoDB redenlp = new redeMongoDB(bsonSpeech);
                                         Pipeline pip = new Pipeline();
                                         JCas jcas = redenlp.toCAS();
                                         List<JCas> jCasrede = new ArrayList<>();
                                         jCasrede.add(jcas);
                                         //System.out.println("hier bin ich" + jCasrede);
-                                        AnalysisEngine pipeline = pip.buildpipeline();
-                                        redenlp.build_pipeline(jcas,pipeline);
-                                        List mapnelist = redenlp.get_named_entities(jCasrede);
-                                        List mapneolist = redenlp.get_named_entities_objects(jCasrede);
-
+                                        AnalysisEngine pipeline = pip.buildPipeline();
+                                        redenlp.buildPipeline(jcas,pipeline);
+                                        List mapnelist = redenlp.getNamedEntities(jCasrede);
+                                        List mapneolist = redenlp.getNamedEntitiesObjects(jCasrede);
                                         bsonSpeech.append("named entities objects", mapneolist); // Added all named entities objects in the order they appear.
                                         bsonSpeech.append("named entities", mapnelist);  // Added all named entities in the order they appear.
+
+                                          */
+
                                         databaseOperation.insertOneDocument(REDE_COLL_KEY, bsonSpeech);
                                     }
 

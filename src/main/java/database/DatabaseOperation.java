@@ -108,6 +108,11 @@ public class DatabaseOperation implements Operation {
         return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(ID_COL_KEY, id)).first();
     }
 
+
+    public Document findDocumentByKey(String collection, String key) {
+        return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(ID_COL_KEY, key)).first();
+    }
+
     @Override
     public void printAllCollections() {
 
