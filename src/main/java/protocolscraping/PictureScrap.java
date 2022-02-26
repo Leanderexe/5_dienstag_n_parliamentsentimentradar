@@ -7,11 +7,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class PictureScrap {
@@ -21,7 +25,7 @@ public class PictureScrap {
 		//String speakerName;
 
 
-		public URL run(String speakerName) {
+		public Map<URL,BufferedImage> run(String speakerName) {
 
 			try {
 
@@ -32,7 +36,7 @@ public class PictureScrap {
 				Scarper scarper = new Scarper(url);
 				String img = scarper.init();
 
-				URL speakerIMG = scarper.getImageByName(img);
+				Map<URL, BufferedImage> speakerIMG = scarper.getImageByName(img);
 				return speakerIMG;
 
 			} catch (URISyntaxException e) {
@@ -80,22 +84,23 @@ class Scarper {
 		return doc;
 	}
 
-	public URL getImageByName(String name) throws URISyntaxException {
+	public Map<URL, BufferedImage> getImageByName(String name) throws URISyntaxException {
+
 
 		String parentUrl = "https://bilddatenbank.bundestag.de";
 		byte[] fileContent = null;
 		try {
+			Map<URL, BufferedImage> picInfo = new HashMap<>();
 			//fileContent = IOUtils.toByteArray(new URL(parentUrl + name));
 			URL uriella = new URL(parentUrl + name);
 			fileContent = IOUtils.toByteArray(uriella);
 			ByteArrayInputStream inStreambj = new ByteArrayInputStream(fileContent);
-			//BufferedImage newImage = ImageIO.read(inStreambj);
+			BufferedImage metaData = ImageIO.read(inStreambj);
 			//ImageIO.write(newImage, "jpg", new File(name ));
 			System.out.println("Image generated from the byte array.");
-			System.out.println("In Sreamy " + inStreambj);
-			System.out.println("Uriella " + uriella);
-			//return newImage;
-			return uriella;
+			picInfo.put(uriella, metaData);
+
+			return picInfo;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

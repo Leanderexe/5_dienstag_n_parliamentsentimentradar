@@ -40,17 +40,25 @@ public class MongoDBConnectionHandler {
     private final String remotePortKey = "remote_port";
     private final String remoteCollectionKey = "remote_collection";
 
+    /**
+     * Initiating variables
+     */
     private final String CONFIG_FILE = "databaseConfi";
     private String remoteCollectionValue = "";
     private String remoteDatabaseValue = "";
     private Properties properties;
 
+    /**
+     * Constructor class defining the process of initiating MongoDBConnectionHandler
+     */
     public MongoDBConnectionHandler() {
         createProperties();
     }
-    /*
+
+    /**
      * Create properties for database connection
-     * */
+     * @author Manuel Aha
+     */
     private void createProperties() {
 
         //Create property file
@@ -80,8 +88,13 @@ public class MongoDBConnectionHandler {
         }
     }
 
+    /**
+     * Fetch property file for database credentials to create connextion string
+     * @return the connection string for database access
+     * @author Manuel Aha
+     */
     private String dbCredentials() {
-        //Fetch property file
+        //Fetching through InputStream
         try {
             InputStream is = new FileInputStream(CONFIG_FILE);
         } catch (FileNotFoundException e) {
@@ -96,9 +109,6 @@ public class MongoDBConnectionHandler {
 
         remoteDatabaseValue = remoteDatabase;
 
-        //"mongodb://" + remote_user + ":" + remote_password + "@" + remote_host + ":" + remote_port + "/" + remote_database
-        //return String.format("mongodb://%s:%s@%s:%s/%s", remoteUser, remotePassword, remoteName, remotePort, remoteDatabase);
-        //System.out.println("mongodb://" + remoteUser + ":" + remotePassword + "@" + remoteName + ":" + remotePort + "/" + remoteDatabase);
         return "mongodb://" + remoteUser + ":" + remotePassword + "@" + remoteName + ":" + remotePort + "/" + remoteDatabase;
     }
     /*

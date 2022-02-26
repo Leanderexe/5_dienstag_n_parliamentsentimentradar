@@ -30,6 +30,7 @@ public class DatabaseOperation implements Operation {
     public static final String VORNAME_COL_KEY = "vorname";
     public static final String TITLE_COL_KEY = "title";
     public static final String ID_COL_KEY = "_id";
+    public static final String REDNER_IMAGE = "image";
 
     public static final String REDNER_KEY = "redner";
     public static final String PROTOKOL_KEY = "dbtplenarprotokoll";
