@@ -13,8 +13,13 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import NLP.Pipeline;
+import NLP.Rede_MongoDB;
 import database.DatabaseOperation;
 import entity.Speech;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
@@ -83,6 +88,8 @@ public class XmlConversion {
         System.out.println(datas);
         System.out.println("HALLO");
 
+        //databaseOperation.deleteCollection("dbtplenarprotokoll");
+        //xmlToBsonDocument(datas);
         /*
         try {
             extractSpeech(datas);
@@ -92,12 +99,13 @@ public class XmlConversion {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
+        } catch (ResourceInitializationException e) {
+            e.printStackTrace();
         }
 
          */
 
 
-        xmlToBsonDocument(datas);
     }
 
     private String getIdByXpath(String searchValue, String pageSource) {
@@ -360,8 +368,8 @@ public class XmlConversion {
         }
     }
 
-    private void extractSpeech(Map<String, Map<String,String>> datas) throws ParserConfigurationException, IOException, SAXException {
-
+    private void extractSpeech(Map<String, Map<String,String>> datas) throws ParserConfigurationException, IOException, SAXException, ResourceInitializationException {
+        //databaseOperation.deleteCollection("speeches");
         for (Map.Entry<String, Map<String,String>> data : datas.entrySet()) {
 
             Map<String, String> xmlURL = data.getValue();
@@ -480,12 +488,25 @@ public class XmlConversion {
                                         Speech speech = new Speech(Datum, redner_id, rede_id, Speech_Liste, Kommentare_pro_rede);
                                         speech.printSpeech();
                                         //Speaker_list.add(speech);
+
                                         org.bson.Document bsonSpeech = new org.bson.Document(REDE_DATE_KEY, Datum);
                                         bsonSpeech.append(REDE_SPEAKER_KEY,redner_id);
                                         bsonSpeech.append(REDE_ID_KEY, rede_id);
                                         bsonSpeech.append(REDE_CONTENT_KEY, Speech_Liste);
                                         bsonSpeech.append(REDE_COMMENTS_KEY, Kommentare_pro_rede);
+                                        Rede_MongoDB redenlp = new Rede_MongoDB(bsonSpeech);
+                                        Pipeline pip = new Pipeline();
+                                        JCas jcas = redenlp.toCAS();
+                                        List<JCas> jCasrede = new ArrayList<>();
+                                        jCasrede.add(jcas);
+                                        //System.out.println("hier bin ich" + jCasrede);
+                                        AnalysisEngine pipeline = pip.buildpipeline();
+                                        redenlp.build_pipeline(jcas,pipeline);
+                                        List mapnelist = redenlp.get_named_entities(jCasrede);
+                                        List mapneolist = redenlp.get_named_entities_objects(jCasrede);
 
+                                        bsonSpeech.append("named entities objects", mapneolist); // Added all named entities objects in the order they appear.
+                                        bsonSpeech.append("named entities", mapnelist);  // Added all named entities in the order they appear.
                                         databaseOperation.insertOneDocument(REDE_COLL_KEY, bsonSpeech);
                                     }
 

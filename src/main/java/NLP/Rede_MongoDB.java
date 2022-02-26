@@ -253,4 +253,24 @@ public class Rede_MongoDB {
             }
         return map;
     }
+
+    public List get_named_entities(List<JCas> jcas_list) {
+        List list = new ArrayList();
+        for (int k = 0; k < jcas_list.size(); k++) {
+            for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
+                list.add(entity.getValue());
+            }
+        }
+        return list;
+    }
+
+    public List get_named_entities_objects(List<JCas> jcas_list) {
+        List list = new ArrayList();
+        for (int k = 0; k < jcas_list.size(); k++) {
+            for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
+                list.add(entity.getCoveredText());
+            }
+        }
+        return list;
+    }
 }

@@ -6,6 +6,7 @@ import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 import org.bson.Document;
 import org.hucompute.textimager.uima.gervader.GerVaderSentiment;
 import org.hucompute.textimager.uima.spacy.SpaCyMultiTagger3;
@@ -73,7 +74,7 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("named entities", key);
             document.append("Häufigkeit",mapne.get(key));
             System.out.println(document);
-            //db.insertOneDocument("named entities", document);
+            db.insertOneDocument("named entities", document);
         }
 
 
@@ -83,7 +84,7 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("Token", key);
             document.append("Häufigkeit",maptoken.get(key));
             System.out.println(document);
-            //db.insertOneDocument("token", document);
+            db.insertOneDocument("token", document);
         }
 
         //db.createNewCollection("POS");
@@ -93,7 +94,7 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("POS", key);
             document.append("Häufigkeit",mappos.get(key));
             System.out.println(document);
-            //db.insertOneDocument("POS", document);
+            db.insertOneDocument("POS", document);
         }
 
         Map<Double, Integer> mapsentiment = dbrede.print_sentiment(jCasrede);
@@ -102,9 +103,18 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("sentiment", key);
             document.append("Häufigkeit",mapsentiment.get(key));
             System.out.println(document);
-            //db.insertOneDocument("sentiment", document);
+            db.insertOneDocument("sentiment", document);
         }
 
     }
+
+    public AnalysisEngine buildpipeline() throws ResourceInitializationException {
+        AggregateBuilder aggregateBuilder = new AggregateBuilder();
+        aggregateBuilder.add(createEngineDescription(SpaCyMultiTagger3.class, SpaCyMultiTagger3.PARAM_REST_ENDPOINT, "http://spacy.prg2021.texttechnologylab.org"));
+        aggregateBuilder.add(createEngineDescription(GerVaderSentiment.class, GerVaderSentiment.PARAM_REST_ENDPOINT, "http://gervader.prg2021.texttechnologylab.org" , GerVaderSentiment.PARAM_SELECTION, "text,de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"));
+        AnalysisEngine pipeline = aggregateBuilder.createAggregate();
+        return pipeline;
+    }
+
 
 }
