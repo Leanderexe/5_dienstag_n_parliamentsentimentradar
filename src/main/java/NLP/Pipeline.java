@@ -33,6 +33,7 @@ public class Pipeline {
      * initializes the pipeline and calls the function that creates the JCas objects.
      * also calls the function that adds all named entities, POS, named entities objects, sentiments and Token to the database.
      * @author Leander Hermanns
+     * @modified Manuel Aha
      */
     public void generatejCAStop() throws UIMAException {
         //db.deleteCollection("named entities");

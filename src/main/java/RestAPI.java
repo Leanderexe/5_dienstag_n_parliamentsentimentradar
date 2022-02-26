@@ -19,70 +19,26 @@ import java.util.List;
 
 import static spark.Spark.*;
 
-
+/**
+ * Implements the RestAPI and defines the routes and parameters.
+ * @author Leander Hermanns
+ * @modified Manuel Aha
+ */
 public class RestAPI {
     private static JsonUtil util = new JsonUtil();
     static DatabaseOperation db = new DatabaseOperation();
     JSONParser parser = new JSONParser();
     public static void main(String[] args) throws IOException, JSONException, UIMAException {
         Pipeline pip = new Pipeline();
-        pip.generatejCAStop(); // generates the JCas objects.
-        // String[] redner = {"angela Merkel", "Putin", "Markon", "Lauterbach", "Amthor", "trump", "sleepy joe"};
-        List key = new ArrayList();
-        List value = new ArrayList();
-        for(int i = 0; i < 10; i++){
-            key.add("key " + i);
-            value.add("value " + i);
-        }
-        //System.out.println(db.findAllDocument("redner"));
-        //List rednerlist = new ArrayList();
-        //for(Document doc: db.findAllDocument("redner")){
-        //    rednerlist.add(doc.toJson());
-        //}
-        //String output = getsingleJson("redner", rednerlist.toString());
-        //System.out.println(rednerlist);
+        //pip.generatejCAStop(); // generates the JCas objects.
 
-/*
-        String rednerstring = "{";
-        for (int i = 0; i < redner.length; i++){
-            if (i == redner.length-1){
-                rednerstring += redner[i] + "}";
-            }
-            else {
-                rednerstring += redner[i] + ", ";
-            }
-        }
-
-        System.out.println(rednerstring);
-        */
-        String json = getJson(key, value);
         // url: http://localhost:4567/rest
         init();
-        //initExceptionHandler((e) -> System.out.println("Ups! Der Server konnte leider nicht gestartet werden."));
-        /*
-        post("/rest", ((request, response) ->
-                {
-                    response.redirect("/bar");
-                    request.headers("okay lets go!");
-                    return true;
-                }
-                ));
 
-        get("/rest", (request, response) -> "Hello");
-
-        get("/rest", ((request, response) ->
-        {
-            String hello = request.headers("i bims ein header");
-            response.header(hello, "2");
-            return true;
-        }));
-        //halt(400);
-
-         */
-        //final String finalRednerstring = "hello world";
         /**
          * Prints out JSON with all rendner at http://localhost:4567/redner
          * @return String with the all Redner in JSON.
+         * @author Leander Hermanns
          */
         get("/redner", (request, response) -> {
             List rednerlist = new ArrayList();
@@ -92,11 +48,20 @@ public class RestAPI {
                 return rednerlist;
             }, util.json());
 
+
+        /**
+         * Makes the API return the respones in json format.
+         * @author Leander Hermanns
+         */
         after((request, response) -> {
             response.type("application/json");
         });
 
-        // grant Access so one can get page content from javascript.
+
+        /**
+         * grant Access so one can get page content from javascript.
+         * @author Leander Hermanns
+         */
         after((Filter) (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
             response.header("Access-Control-Allow-Methods", "GET");
@@ -105,8 +70,9 @@ public class RestAPI {
 
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/redner/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all speaker by their name which contain the search parameter at http://localhost:4567/redner/:searchstr
+         * @return String with all speaker which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/redner/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -122,8 +88,9 @@ public class RestAPI {
 
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/redner/id/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all speaker whose id matches the search parameter at http://localhost:4567/redner/id/:searchstr
+         * @return String with all speaker whose id matches the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/redner/id/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -139,8 +106,9 @@ public class RestAPI {
 
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/redner/fraktion/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all speaker whose fraction matches the search parameter at http://localhost:4567/redner/fraktion/:searchstr
+         * @return String with all speaker whose fraction matches the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/redner/fraktion/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -158,6 +126,7 @@ public class RestAPI {
          * Prints out JSON with all Tokens at http://localhost:4567/token
          * Exercise b1)
          * @return String with the all Tokens in JSON.
+         * @author Leander Hermanns
          */
         get("/token", (request, response) -> {
             List rednerlist = new ArrayList();
@@ -168,8 +137,9 @@ public class RestAPI {
         }, util.json());
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/token/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all tokens which contain the search parameter at http://localhost:4567/token/:searchstr
+         * @return String with all tokens which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/token/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -189,6 +159,7 @@ public class RestAPI {
          * Prints out JSON with all POS at http://localhost:4567/pos
          * Exercise b2)
          * @return String with the all POS in JSON.
+         * @author Leander Hermanns
          */
         get("/pos", (request, response) -> {
             List rednerlist = new ArrayList();
@@ -199,8 +170,9 @@ public class RestAPI {
         }, util.json());
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/pos/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all POS which contain the search parameter at http://localhost:4567/pos/:searchstr
+         * @return String with POS which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/pos/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -219,6 +191,7 @@ public class RestAPI {
          * Prints out JSON with all sentiment at http://localhost:4567/sentiment
          * Exercise b3)
          * @return String with the all sentiment in JSON.
+         * @author Leander Hermanns
          */
         get("/sentiment", (request, response) -> {
             List rednerlist = new ArrayList();
@@ -229,8 +202,9 @@ public class RestAPI {
         }, util.json());
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/sentiment/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all sentiments which contain the search parameter at http://localhost:4567/sentiment/:searchstr
+         * @return String with all sentiments which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/sentiment/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -249,6 +223,7 @@ public class RestAPI {
          * Prints out JSON with all named entities at http://localhost:4567/namedentities
          * Exercise b4)
          * @return String with the all named entities in JSON.
+         * @author Leander Hermanns
          */
         get("/namedentities", (request, response) -> {
             List rednerlist = new ArrayList();
@@ -259,8 +234,9 @@ public class RestAPI {
         }, util.json());
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/namedentities/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all named entities which contain the search parameter at http://localhost:4567/namedentities/:searchstr
+         * @return String with all named entities which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/namedentities/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -276,9 +252,10 @@ public class RestAPI {
 
 
         /**
-         * Prints out JSON with all named entities at http://localhost:4567/namedentitiesobjects
+         * Prints out JSON with all named entities objects at http://localhost:4567/namedentitiesobjects
          * Exercise b4)
-         * @return String with the all named entities in JSON.
+         * @return String with the all named entities objects in JSON.
+         * @author Leander Hermanns
          */
         get("/namedentitiesobjects", (request, response) -> {
             List rednerlist = new ArrayList();
@@ -289,8 +266,9 @@ public class RestAPI {
         }, util.json());
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/namedentitiesobjects/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all named entities objects which contain the search parameter at http://localhost:4567/namedentitiesobjects/:searchstr
+         * @return String with all named entities objects which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/namedentitiesobjects/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -307,9 +285,10 @@ public class RestAPI {
 
 
         /**
-         * Prints out JSON with all named entities at http://localhost:4567/rede
+         * Prints out JSON with all speeches at http://localhost:4567/rede
          * Exercise b4)
-         * @return String with the all named entities in JSON.
+         * @return String with the all speeches in JSON.
+         * @author Leander Hermanns
          */
         get("/rede", (request, response) -> {
             List rednerlist = new ArrayList();
@@ -321,8 +300,9 @@ public class RestAPI {
 
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/rede/content/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with all speeches whose part of the content matches the search parameter at http://localhost:4567/rede/content/:searchstr
+         * @return String with speches which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/rede/content/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -342,8 +322,9 @@ public class RestAPI {
 
 
         /**
-         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/rede/redeid/:searchstr
-         * @return String with redner which contain the search parameter in JSON.
+         * Prints out JSON with a speech whose id matches the search parameter at http://localhost:4567/rede/redeid/:searchstr
+         * @return String with a speech which contain the search parameter in JSON.
+         * @author Leander Hermanns
          */
         get("/rede/redeid/:searchstr", (request, response) -> {
             String searchstr = request.params(":searchstr");
@@ -361,7 +342,11 @@ public class RestAPI {
 
 
 
-
+    /**
+     * Merges a list of keys and a list of value to a Json String.
+     * @return String with Json format
+     * @author Leander Hermanns
+     */
     private static String getJson(List key, List value) {
         String json = "";
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -372,57 +357,6 @@ public class RestAPI {
         json = builder.build().toString();
         return json;
     }
-
-    private static String byname(String name, List key, List value) throws JSONException {
-        JSONObject jn = new JSONObject("hello");
-        if (key.contains(name)){
-            for(int i = 0; i < key.size(); i++){
-                if (key.get(i).toString().equals(name)){
-                    getsingleJson((String)key.get(i), (String)value.get(i));
-                    return getsingleJson((String)key.get(i), (String)value.get(i));
-                }
-            }
-            return "false";
-        }
-        else{
-            return "false";
-        }
-    }
-
-    private static String getsingleJson(String key, String value) {
-        String json = "";
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        builder.add(key, value);
-        json = builder.build().toString();
-        return json;
-    }
-
-    /*
-    private static List sortData(List data){
-
-        for (int i = 0; i < data.size(); i++){
-            Integer value = data.get(i);
-            if (value > highest_val) {
-                highest_val = value;
-            }
-        }
-        List<String>  removed_key = new ArrayList();
-        System.out.println('\n' + ">>>>>>>>>>>>>>>>> Auflistung der named entities nach dessen Typ absteigend sortiert.  <<<<<<<<<<<<<<<<<");
-        for (int i = highest_val; i > 0; i--){
-            removed_key.clear();
-            for (String key: map.keySet()){
-                if (map.get(key).equals(i)){
-                    sortedmap.put(key, map.get(key));
-                    System.out.println("Typ: '" + key + "'        Anzahl an Einträgen: " + map.get(key));
-                    removed_key.add(key);
-                }
-            }
-        }
-        return sortedmap;
-    }
-
-     */
-
 
 }
 
