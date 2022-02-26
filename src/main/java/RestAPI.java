@@ -26,7 +26,7 @@ public class RestAPI {
     JSONParser parser = new JSONParser();
     public static void main(String[] args) throws IOException, JSONException, UIMAException {
         Pipeline pip = new Pipeline();
-        //pip.generatejCAStop(); // generates the JCas objects.
+        pip.generatejCAStop(); // generates the JCas objects.
         // String[] redner = {"angela Merkel", "Putin", "Markon", "Lauterbach", "Amthor", "trump", "sleepy joe"};
         List key = new ArrayList();
         List value = new ArrayList();

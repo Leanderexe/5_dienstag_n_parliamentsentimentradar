@@ -14,7 +14,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import NLP.Pipeline;
-import NLP.Rede_MongoDB;
+import NLP.redeMongoDB;
 import database.DatabaseOperation;
 import entity.Speech;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -491,6 +491,7 @@ public class XmlConversion {
                                         bsonSpeech.append(REDE_ID_KEY, rede_id);
                                         bsonSpeech.append(REDE_CONTENT_KEY, Speech_Liste);
                                         bsonSpeech.append(REDE_COMMENTS_KEY, Kommentare_pro_rede);
+                                        /*
                                         Rede_MongoDB redenlp = new Rede_MongoDB(bsonSpeech);
                                         Pipeline pip = new Pipeline();
                                         JCas jcas = redenlp.toCAS();
@@ -502,8 +503,11 @@ public class XmlConversion {
                                         List mapnelist = redenlp.get_named_entities(jCasrede);
                                         List mapneolist = redenlp.get_named_entities_objects(jCasrede);
 
+
                                         bsonSpeech.append("named entities objects", mapneolist); // Added all named entities objects in the order they appear.
                                         bsonSpeech.append("named entities", mapnelist);  // Added all named entities in the order they appear.
+
+                                         */
                                         databaseOperation.insertOneDocument(REDE_COLL_KEY, bsonSpeech);
                                     }
 

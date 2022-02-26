@@ -145,8 +145,10 @@ public class DatabaseOperation implements Operation {
     }
 
 
-    public Document findDocumentByKey(String collection, String key) {
-        return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(ID_COL_KEY, key)).first();
+    public Document findDocumentByKey(String collection, String key, String fieldname) {
+        System.out.println(mongoDBConnectionHandler.getDatabase().getCollection(collection).find(Filters.eq(fieldname, key)).iterator());
+        //mongoDBConnectionHandler.getDatabase().getCollection(collection).find({ fieldname : { '$exists' : true }})
+        return (Document) mongoDBConnectionHandler.getDatabase().getCollection(collection).find(Filters.eq(fieldname, key));
     }
 
     @Override

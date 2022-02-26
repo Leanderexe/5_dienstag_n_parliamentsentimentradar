@@ -17,6 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2 copied and reworked from my own Uebung2.
+ * The class holds methods that can analyse the JCas objects for the different NLP methods.
+ */
 public class redeMongoDB {
     Document doc;
     List Cas = new ArrayList();
@@ -52,8 +56,7 @@ public class redeMongoDB {
     }
 
     /**
-     * builds up thew pipeline between the Analysis Engine and the JCas object.
-     * @return true if document was created in MongoDB collection, false if not
+     * builds up the pipeline between the Analysis Engine and the JCas object.
      * @param jcas
      * @param pipeline
      */
@@ -71,7 +74,7 @@ public class redeMongoDB {
     /**
      * caluates and sorts all used tokens by how much they were used and prints it out.
      * @param jcas_list
-     * @return
+     * @return map with all analysed Tokens and the number of appearances.
      */
     public Map<String, Integer> printToken(List<JCas> jcas_list){
         Map<String, Integer> sortedmap = new HashMap<String, Integer>();
@@ -115,7 +118,7 @@ public class redeMongoDB {
     /**
      * caluates and sorts all used named entities by how much they were used and prints it out.
      * @param jcas_list
-     * @return
+     * @return map with all analysed named entities by Location, Organisation, MISC, Person and the number of appearances.
      */
     public Map<String, Integer> printNamedEntities(List<JCas> jcas_list){
         Map<String, Integer> sortedmap = new HashMap<String, Integer>();
@@ -152,6 +155,11 @@ public class redeMongoDB {
         return sortedmap;
     }
 
+    /**
+     * caluates and sorts all used named entities objects by how much they were used and prints it out.
+     * @param jcas_list
+     * @return map with all analysed named entities and the number of appearances.
+     */
     public Map<String, Integer> printNamedEntitiesobjects(List<JCas> jcas_list){
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
@@ -171,7 +179,7 @@ public class redeMongoDB {
     /**
      * caluates and sorts all used Part of Speeches by how much they were used and prints it out.
      * @param jcas_list
-     * @return
+     * @return map with all analysed POS and the number of appearances.
      */
     public Map<String, Integer> printPos(List<JCas> jcas_list) {
         Map<String, Integer> sortedmap = new HashMap<String, Integer>();
@@ -215,27 +223,11 @@ public class redeMongoDB {
     }
 
 
-    /**
-     * Source: @ https://gitlab.texttechnologylab.org/LeanderHermanns/uebung2_2020 copied and reworked from my own Uebung2 project from last year.
-     * create a JCas Object of a document from the collection Rede for every Comment.
-     * @return JCas
-     */
-    public JCas toCAS_rede() {
-        JCas jCAS = null;
-        try {
-            Object tag = doc.get("Kommentare");
-            jCAS = JCasFactory.createText(tag.toString(), "de");
-
-        } catch (UIMAException e) {
-            System.out.println("Oops! Something went terribly wrong: Strange UIMAException ... ");
-        }
-        return jCAS;
-    }
-
 
     /**
      * caluates and sorts every speech by the sentiment of all the comments made during that speech and prints it out.
      * @param jcas_list
+     * @return map with all analysed Sentiments and the number of appearances.
      */
     public Map<Double, Integer> printSentiment(List<JCas> jcas_list){
         Map<Double, Integer> map = new HashMap<>();
@@ -255,6 +247,12 @@ public class redeMongoDB {
         return map;
     }
 
+
+    /**
+     * caluates and sorts every speech by the named entities by Location, Organisation, MISC, Person of all the comments made during that speech and prints it out.
+     * @param jcas_list
+     * @return list with all analysed named entities by Location, Organisation, MISC, Person by their appearance.
+     */
     public List getNamedEntities(List<JCas> jcas_list) {
         List list = new ArrayList();
         for (int k = 0; k < jcas_list.size(); k++) {
@@ -265,6 +263,11 @@ public class redeMongoDB {
         return list;
     }
 
+    /**
+     * caluates and sorts every speech by the named entities of all the comments made during that speech and prints it out.
+     * @param jcas_list
+     * @return list with all analysed named entities by their appearance.
+     */
     public List getNamedEntitiesObjects(List<JCas> jcas_list) {
         List list = new ArrayList();
         for (int k = 0; k < jcas_list.size(); k++) {
