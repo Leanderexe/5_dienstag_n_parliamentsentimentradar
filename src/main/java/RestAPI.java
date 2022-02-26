@@ -257,6 +257,36 @@ public class RestAPI {
             return rednerlist;
         }, util.json());
 
+
+        /**
+         * Prints out JSON with all named entities at http://localhost:4567/namedentitiesobjects
+         * Exercise b4)
+         * @return String with the all named entities in JSON.
+         */
+        get("/namedentitiesobjects", (request, response) -> {
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("named entities objects")){
+                rednerlist.add(doc);
+            }
+            return rednerlist;
+        }, util.json());
+
+        /**
+         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/namedentitiesobjects/:searchstr
+         * @return String with redner which contain the search parameter in JSON.
+         */
+        get("/namedentitiesobjects/:searchstr", (request, response) -> {
+            String searchstr = request.params(":searchstr");
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("named entities objects")){
+                String sentiment =  (String) doc.get("named entities object");
+                if (sentiment.contains(searchstr)){
+                    rednerlist.add(doc);
+                }
+            }
+            return rednerlist;
+        }, util.json());
+
     }
 
     private static String getJson(List key, List value) {

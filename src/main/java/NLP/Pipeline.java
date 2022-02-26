@@ -52,10 +52,20 @@ public class Pipeline {
             //System.out.println("hier bin ich" + jCasrede);
             dbrede.build_pipeline(jcas,pipeline);
             if (i == limit){
+                //jCasrede.clear();
                 break;
             }
         }
 
+
+        Map<String, Integer> mapneo = dbrede.print_named_entitiesobjects(jCasrede);
+        System.out.println("hello wo ist die map" + mapneo);
+        for (String key: mapneo.keySet()){
+            org.bson.Document document = new org.bson.Document("named entities object", key);
+            document.append("Häufigkeit",mapneo.get(key));
+            System.out.println(document);
+            db.insertOneDocument("named entities objects", document);
+        }
 
         Map<String, Integer> mapne = dbrede.print_named_entities(jCasrede);
         System.out.println("hello wo ist die map" + mapne);
@@ -63,7 +73,7 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("named entities", key);
             document.append("Häufigkeit",mapne.get(key));
             System.out.println(document);
-            db.insertOneDocument("named entities", document);
+            //db.insertOneDocument("named entities", document);
         }
 
 
@@ -73,7 +83,7 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("Token", key);
             document.append("Häufigkeit",maptoken.get(key));
             System.out.println(document);
-            db.insertOneDocument("token", document);
+            //db.insertOneDocument("token", document);
         }
 
         //db.createNewCollection("POS");
@@ -83,7 +93,7 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("POS", key);
             document.append("Häufigkeit",mappos.get(key));
             System.out.println(document);
-            db.insertOneDocument("POS", document);
+            //db.insertOneDocument("POS", document);
         }
 
         Map<Double, Integer> mapsentiment = dbrede.print_sentiment(jCasrede);
@@ -92,7 +102,7 @@ public class Pipeline {
             org.bson.Document document = new org.bson.Document("sentiment", key);
             document.append("Häufigkeit",mapsentiment.get(key));
             System.out.println(document);
-            db.insertOneDocument("sentiment", document);
+            //db.insertOneDocument("sentiment", document);
         }
 
     }

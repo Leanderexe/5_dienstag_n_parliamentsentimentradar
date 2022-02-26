@@ -151,6 +151,22 @@ public class Rede_MongoDB {
         return sortedmap;
     }
 
+    public Map<String, Integer> print_named_entitiesobjects(List<JCas> jcas_list){
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        for (int k = 0; k < jcas_list.size(); k++) {
+            for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
+                System.out.println(entity.getCoveredText() + " " + map);
+                if (map.containsKey(entity.getCoveredText())) {
+                    System.out.println(entity.getValue() + " " + entity.getCoveredText());
+                    map.replace(entity.getCoveredText(), map.get(entity.getCoveredText()), map.get(entity.getCoveredText()) + 1);
+                } else {
+                    map.put(entity.getCoveredText(), 1);
+                }
+            }
+        }
+        return map;
+    }
+
     /**
      * caluates and sorts all used Part of Speeches by how much they were used and prints it out.
      * @param jcas_list
