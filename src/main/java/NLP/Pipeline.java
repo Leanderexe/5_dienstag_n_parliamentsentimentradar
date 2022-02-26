@@ -25,9 +25,10 @@ public class Pipeline {
      * initializes the pipeline and calls the function that creates the JCas objects.
      */
     public void generate_jCAS_top() throws UIMAException {
-        db.deleteCollection("named entities");
-        db.deleteCollection("token");
-        db.deleteCollection("POS");
+        //db.deleteCollection("named entities");
+        //db.deleteCollection("token");
+        //db.deleteCollection("POS");
+        //db.deleteCollection("sentiment");
         AggregateBuilder aggregateBuilder = new AggregateBuilder();
         aggregateBuilder.add(createEngineDescription(SpaCyMultiTagger3.class, SpaCyMultiTagger3.PARAM_REST_ENDPOINT, "http://spacy.prg2021.texttechnologylab.org"));
         aggregateBuilder.add(createEngineDescription(GerVaderSentiment.class, GerVaderSentiment.PARAM_REST_ENDPOINT, "http://gervader.prg2021.texttechnologylab.org" , GerVaderSentiment.PARAM_SELECTION, "text,de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"));
@@ -38,7 +39,7 @@ public class Pipeline {
         Scanner Sitz = new Scanner(System.in);
         System.out.println('\n');
         //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> Geben Sie die Anzahl an Dokumenten, die Sie einlesen wollen, ein (1 - ...). Wenn Sie alle einlesen wollen geben Sie 0 ein.: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        int limit = 100;  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
+        int limit = 20;  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
         int i  = 0;
         while(cursor.hasNext()) {
             i += 1;
@@ -48,14 +49,14 @@ public class Pipeline {
             dbrede = new Rede_MongoDB(doc);
             JCas jcas = dbrede.toCAS();
             jCasrede.add(jcas);
+            //System.out.println("hier bin ich" + jCasrede);
             dbrede.build_pipeline(jcas,pipeline);
             if (i == limit){
                 break;
             }
         }
 
-        List illegalstr = new ArrayList();
-        illegalstr.add(".");
+
         Map<String, Integer> mapne = dbrede.print_named_entities(jCasrede);
         System.out.println("hello wo ist die map" + mapne);
         for (String key: mapne.keySet()){
@@ -65,24 +66,10 @@ public class Pipeline {
             db.insertOneDocument("named entities", document);
         }
 
+
         Map<String, Integer> maptoken = dbrede.print_token(jCasrede);
         System.out.println("hello wo ist die map" + maptoken);
         for (String key: maptoken.keySet()){
-            /*
-            if (key.contains(".")){
-                org.bson.Document document = new org.bson.Document("Token", key);
-                document.append("Häufigkeit",maptoken.get(key));
-                System.out.println(document);
-                //db.insertOneDocument("token", document);
-            }
-            else if (key.contains("$")){
-                org.bson.Document document = new org.bson.Document( key + "illegal", maptoken.get(key));
-                System.out.println(document);
-                //db.insertOneDocument("token", document);
-            }
-            else {
-
-             */
             org.bson.Document document = new org.bson.Document("Token", key);
             document.append("Häufigkeit",maptoken.get(key));
             System.out.println(document);
@@ -93,26 +80,21 @@ public class Pipeline {
         Map<String, Integer> mappos = dbrede.print_pos(jCasrede);
         System.out.println("hello wo ist die map" + mappos);
         for (String key: mappos.keySet()){
-            /*
-            if (key.contains(".")){
-                org.bson.Document document = new org.bson.Document( key + "illegal", mappos.get(key));
-                System.out.println(document);
-                //db.insertOneDocument("token", document);
-            }
-            else if (key.contains("$")){
-                org.bson.Document document = new org.bson.Document( key + "illegal", mappos.get(key));
-                System.out.println(document);
-                //db.insertOneDocument("token", document);
-            }
-
-
-            else{
-
-             */
             org.bson.Document document = new org.bson.Document("POS", key);
             document.append("Häufigkeit",mappos.get(key));
             System.out.println(document);
             db.insertOneDocument("POS", document);
         }
+
+        Map<Double, Integer> mapsentiment = dbrede.print_sentiment(jCasrede);
+        System.out.println("hello wo ist die map" + mapsentiment);
+        for (double key: mapsentiment.keySet()){
+            org.bson.Document document = new org.bson.Document("sentiment", key);
+            document.append("Häufigkeit",mapsentiment.get(key));
+            System.out.println(document);
+            db.insertOneDocument("sentiment", document);
+        }
+
     }
+
 }

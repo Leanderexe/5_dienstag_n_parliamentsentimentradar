@@ -73,6 +73,7 @@ public class Rede_MongoDB {
      * @return
      */
     public Map<String, Integer> print_token(List<JCas> jcas_list){
+        Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (Token token : JCasUtil.select(jcas_list.get(k), Token.class)) {
@@ -101,12 +102,13 @@ public class Rede_MongoDB {
             removed_key.clear();
             for (String key: map.keySet()){
                 if (map.get(key).equals(i)){
+                    sortedmap.put(key, map.get(key));
                     System.out.println("Token: '" + key + "'        Anzahl an Einträgen: " + map.get(key));
                     removed_key.add(key);
                 }
             }
         }
-        return map;
+        return sortedmap;
     }
 
     /**
@@ -115,7 +117,7 @@ public class Rede_MongoDB {
      * @return
      */
     public Map<String, Integer> print_named_entities(List<JCas> jcas_list){
-
+        Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
@@ -140,12 +142,13 @@ public class Rede_MongoDB {
             removed_key.clear();
             for (String key: map.keySet()){
                 if (map.get(key).equals(i)){
+                    sortedmap.put(key, map.get(key));
                     System.out.println("Typ: '" + key + "'        Anzahl an Einträgen: " + map.get(key));
                     removed_key.add(key);
                 }
             }
         }
-        return map;
+        return sortedmap;
     }
 
     /**
@@ -154,6 +157,7 @@ public class Rede_MongoDB {
      * @return
      */
     public Map<String, Integer> print_pos(List<JCas> jcas_list) {
+        Map<String, Integer> sortedmap = new HashMap<String, Integer>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (Token token : JCasUtil.select(jcas_list.get(k), Token.class)) {
@@ -183,13 +187,14 @@ public class Rede_MongoDB {
             removed_key.clear();
             for (String key: map.keySet()){
                 if (map.get(key).equals(i)){
+                    sortedmap.put(key, map.get(key));
                     System.out.println("Wortart: '" + key + "'        Häufigkeit: " + map.get(key));
                     removed_key.add(key);
                 }
             }
         }
         System.out.println(maphelper);
-        return maphelper;
+        return sortedmap;
     }
 
 
@@ -214,109 +219,22 @@ public class Rede_MongoDB {
     /**
      * caluates and sorts every speech by the sentiment of all the comments made during that speech and prints it out.
      * @param jcas_list
-     *@param rede_ID
      */
-    public void print_rede(List<JCas> jcas_list,List rede_ID){
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        Map<String, Integer> map_good = new HashMap<String, Integer>();
-        Map<String, Integer> map_bad = new HashMap<String, Integer>();
-        Map<String, Integer> map_neutral = new HashMap<String, Integer>();
+    public Map<Double, Integer> print_sentiment(List<JCas> jcas_list){
+        Map<Double, Integer> map = new HashMap<>();
         for (int k = 0; k < jcas_list.size(); k++) {
-            int good  = 0;
-            int bad = 0;
-            int neutral = 0;
             for (Sentence sentence : JCasUtil.select(jcas_list.get(k), Sentence.class)) {
                 for (Sentiment sentiment : JCasUtil.selectCovered(Sentiment.class, sentence)) {
                     //System.out.println(sentence.getCoveredText() + "  " + sentiment.getSentiment() + " " + k);
-                    if (sentiment.getSentiment() < 0.00){
-                        bad += 1;
-                    }
-                    if (sentiment.getSentiment() == 0.00){
-                        if (sentence.getCoveredText().equals("[]")){
-                        }
-                        else if (sentence.getCoveredText().equals("]")){
-                        }
-                        else {
-                            neutral += 1;
-                        }
-                    }
-                    if (sentiment.getSentiment() > 0.00){
-                        good += 1;
+                    if (map.containsKey(sentiment.getSentiment())) {
+                        map.replace(sentiment.getSentiment(), map.get(sentiment.getSentiment()), map.get(sentiment.getSentiment()) + 1);
+                    } else {
+                        map.put(sentiment.getSentiment(), 1);
+
                     }
                 }
             }
-            map_good.put((String) rede_ID.get(k), good);
-            map_bad.put((String) rede_ID.get(k), bad);
-            map_neutral.put((String) rede_ID.get(k), neutral);
             }
-
-        // Calculate Listings of the Speeches with the most positiv sentiments.
-        Integer highest_val_good = 0;
-        for (Integer value: map_good.values()){
-            if (value > highest_val_good) {
-                highest_val_good = value;
-            }
-        }
-
-        List<String>  removed_key_good = new ArrayList();
-        System.out.println('\n' + ">>>>>>>>>>>>>>>>> Auflistung der Reden nach den meisten positiven Zurufen absteigend sortiert.  <<<<<<<<<<<<<<<<<");
-        for (int i = highest_val_good; i >= 0; i--){
-            removed_key_good.clear();
-            for (String key: map_good.keySet()){
-                if (map_good.get(key).equals(i)){
-                    System.out.println("Rede ID: '" + key + "'        Häufigkeit: " + map_good.get(key));
-                    removed_key_good.add(key);
-                }
-            }
-            for (String key: removed_key_good){
-                map_good.remove(key);
-            }
-        }
-
-        // Calculate Listings of the Speeches with the most neutral sentiments.
-        Integer highest_val_neutral = 0;
-        for (Integer value: map_neutral.values()){
-            if (value > highest_val_neutral) {
-                highest_val_neutral = value;
-            }
-        }
-
-        List<String>  removed_key_neutral = new ArrayList();
-        System.out.println('\n' + ">>>>>>>>>>>>>>>>> Auflistung der Reden nach den meisten neutral Zurufen absteigend sortiert.  <<<<<<<<<<<<<<<<<");
-        for (int i = highest_val_neutral; i >= 0; i--){
-            removed_key_neutral.clear();
-            for (String key: map_neutral.keySet()){
-                if (map_neutral.get(key).equals(i)){
-                    System.out.println("Rede ID: '" + key + "'        Häufigkeit: " + map_neutral.get(key));
-                    removed_key_neutral.add(key);
-                }
-            }
-            for (String key: removed_key_neutral){
-                map_neutral.remove(key);
-            }
-        }
-
-        // Calculate Listings of the Speeches with the most negativ sentiments.
-        Integer highest_val_bad = 0;
-        for (Integer value: map_bad.values()){
-            if (value > highest_val_bad) {
-                highest_val_bad = value;
-            }
-        }
-        //System.out.println(map_bad);
-        List<String>  removed_key_bad = new ArrayList();
-        System.out.println('\n' + ">>>>>>>>>>>>>>>>> Auflistung der Reden nach den meisten negativen Zurufen absteigend sortiert.  <<<<<<<<<<<<<<<<<");
-        for (int i = highest_val_bad; i >= 0; i--){
-            removed_key_bad.clear();
-            for (String key: map_bad.keySet()){
-                if (map_bad.get(key).equals(i)){
-                    System.out.println("Rede ID: '" + key + "'        Häufigkeit: " + map_bad.get(key));
-                    removed_key_bad.add(key);
-                }
-            }
-            for (String key: removed_key_bad){
-                map_bad.remove(key);
-            }
-        }
+        return map;
     }
 }
