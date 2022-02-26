@@ -28,7 +28,7 @@ public class RestAPI {
     JSONParser parser = new JSONParser();
     public static void main(String[] args) throws IOException, JSONException, UIMAException {
         Pipeline pip = new Pipeline();
-        //pip.generate_jCAS_top(); // generates the JCas objects.
+        pip.generate_jCAS_top(); // generates the JCas objects.
         // String[] redner = {"angela Merkel", "Putin", "Markon", "Lauterbach", "Amthor", "trump", "sleepy joe"};
         List key = new ArrayList();
         List value = new ArrayList();
@@ -121,6 +121,24 @@ public class RestAPI {
             }
             return rednerlist;
         }, util.json());
+
+
+        /**
+         * Prints out JSON with redner which contain the search parameter at http://localhost:4567/redner/id/:searchstr
+         * @return String with redner which contain the search parameter in JSON.
+         */
+        get("/redner/id/:searchstr", (request, response) -> {
+            String searchstr = request.params(":searchstr");
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("redner")){
+                String redner = (String) doc.get("_id");
+                if (redner.contains(searchstr)){
+                    rednerlist.add(doc);
+                }
+            }
+            return rednerlist;
+        }, util.json());
+
 
         /**
          * Prints out JSON with redner which contain the search parameter at http://localhost:4567/redner/fraktion/:searchstr
