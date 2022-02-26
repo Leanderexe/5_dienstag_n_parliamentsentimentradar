@@ -4,9 +4,10 @@ import org.bson.Document;
 
 import java.util.List;
 
-/*
-* Mongo database operations
-* */
+/**
+* Interface for Mongo database operations
+* @author Manuel Aha
+*/
 public interface Operation {
 
     Boolean exists(String collectionName);

@@ -30,6 +30,7 @@ public class DatabaseOperation implements Operation {
     public static final String VORNAME_COL_KEY = "vorname";
     public static final String TITLE_COL_KEY = "title";
     public static final String ID_COL_KEY = "_id";
+    public static final String REDNER_IMAGE = "image";
 
     public static final String REDNER_KEY = "redner";
     public static final String PROTOKOL_KEY = "dbtplenarprotokoll";
@@ -142,13 +143,6 @@ public class DatabaseOperation implements Operation {
     @Override
     public Document findDocumentById(String collection, Integer id) {
         return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(ID_COL_KEY, id)).first();
-    }
-
-
-    public Document findDocumentByKey(String collection, String key, String fieldname) {
-        System.out.println(mongoDBConnectionHandler.getDatabase().getCollection(collection).find(Filters.eq(fieldname, key)).iterator());
-        //mongoDBConnectionHandler.getDatabase().getCollection(collection).find({ fieldname : { '$exists' : true }})
-        return (Document) mongoDBConnectionHandler.getDatabase().getCollection(collection).find(Filters.eq(fieldname, key));
     }
 
     @Override

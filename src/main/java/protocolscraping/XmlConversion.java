@@ -1,7 +1,9 @@
 package protocolscraping;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -45,6 +47,8 @@ public class XmlConversion {
 
     private final String REDNER_LIST_KEY = "rednerliste";
     private final String REDNER_KEY = "redner";
+
+    public BufferedImage processedImage;
 
     private final String REDE_COLL_KEY = "speeches";
 
@@ -100,10 +104,9 @@ public class XmlConversion {
             e.printStackTrace();
         }
 
-
-
-
     }
+
+
 
     private String getIdByXpath(String searchValue, String pageSource) {
         String id = "";
@@ -337,16 +340,51 @@ public class XmlConversion {
 
                 data.forEach(d -> {
                     try {
+                        //To avoid to be banned from requesting
+                        Thread.sleep(1200);
                         org.bson.Document speakerdoc = (org.bson.Document) d.get("name");
                         Integer id = (Integer) d.get("id");
+
+
+                        String vorname = speakerdoc.get(DatabaseOperation.VORNAME_COL_KEY).toString();
+                        String fraktion = speakerdoc.get(DatabaseOperation.FRAKTION_COL_KEY).toString();
+                        String nachname = speakerdoc.get(DatabaseOperation.SURNAME_COL_KEY).toString();
+
+
+                        PictureScrap picsy = new PictureScrap();
+                        String name = vorname + " " + nachname;
+                        System.out.println("JOOJOO" + name);
+                        Map<URL,BufferedImage> speakerImg = picsy.run(name);
+
+                        /*URL urlImage = new URL("");
+                        BufferedImage metaData;
+
+                        speakerImg.keySet().
+                        speakerImg.get()
+
+                        for(URL key : speakerImg.keySet()) {
+                            if (speakerImg.keySet().size() == 1) {
+                                urlImage = key;
+                                metaData = speakerImg.get(key);
+                            }
+
+                        }*/
+
+
+                        String strImg = speakerImg.toString();
+
 
                         /*
                         * Creating custom document for avoid duplicates
                         * */
                         org.bson.Document doc = new org.bson.Document(DatabaseOperation.ID_COL_KEY, id);
-                        doc.append(DatabaseOperation.VORNAME_COL_KEY, speakerdoc.get(DatabaseOperation.VORNAME_COL_KEY).toString());
-                        doc.append(DatabaseOperation.FRAKTION_COL_KEY, speakerdoc.get(DatabaseOperation.FRAKTION_COL_KEY).toString());
-                        doc.append(DatabaseOperation.SURNAME_COL_KEY, speakerdoc.get(DatabaseOperation.SURNAME_COL_KEY).toString());
+                        doc.append(DatabaseOperation.VORNAME_COL_KEY, vorname );
+                        doc.append(DatabaseOperation.FRAKTION_COL_KEY, fraktion);
+                        doc.append(DatabaseOperation.SURNAME_COL_KEY, nachname);
+                        doc.append(DatabaseOperation.REDNER_IMAGE, strImg);
+
+
+
 
                         /*
                         * Insert document in database
