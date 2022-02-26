@@ -9,17 +9,19 @@ import org.bson.Document;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Properties;
-/*
- * Mongodb connection class
- * */
+/**
+ * Is creating the connection to the MongoDB database
+ * @author Manuel Aha
+ *
+ */
 public class MongoDBConnectionHandler {
 
     private MongoClient clientWithURI;
     private MongoDatabase mongoDatabase;
     private MongoCollection<Document> mongoCollection;
-    /*
+    /**
      * Database properties values
-     * */
+     */
     private final String hostName =  "prg2021.texttechnologylab.org";
     private final String remoteDatabase = "PRG_WiSe21_Gruppe_5_1";
     private final String remoteUser = "PRG_WiSe21_Gruppe_5_1";
@@ -28,9 +30,9 @@ public class MongoDBConnectionHandler {
     private final String remoteCollection = "speeches";
 
 
-    /*
+    /**
      * Database properties keys
-     * */
+     */
     private final String hostNameKey =  "remote_host";
     private final String remoteDatabaseKey = "remote_database";
     private final String remoteUserKey = "remote_user";
@@ -39,11 +41,8 @@ public class MongoDBConnectionHandler {
     private final String remoteCollectionKey = "remote_collection";
 
     private final String CONFIG_FILE = "databaseConfi";
-
     private String remoteCollectionValue = "";
-
     private String remoteDatabaseValue = "";
-
     private Properties properties;
 
     public MongoDBConnectionHandler() {
