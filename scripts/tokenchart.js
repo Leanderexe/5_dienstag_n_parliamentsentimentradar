@@ -1,28 +1,10 @@
-var xhr2 = new XMLHttpRequest();
-lab=[];
-dat2=[];
-xhr2.onreadystatechange = function() {
-        console.log(this.status);
-        if (this.readyState == 4 && this.status == 200) {
-            var spc2=JSON.parse(this.responseText);
-            for(let i=0;i<spc2.length;i++){
-            lab.push(spc2[i].Token);
-            dat2.push(spc2[i].Häufigkeit);
-            }
-            console.log(lab);
-
-       }
-    };
-xhr2.open("GET", "http://localhost:4567/token", true);
-xhr2.send();
-dat=[];
+tokenfilter("");
 const start = new Date("10/24/2017");
 const end = new Date("02/18/2022");
 
 let loop = new Date(start);
 while (loop <= end) {
   dat.push(loop);
-  console.log(loop);
   let newDate = loop.setDate(loop.getDate() + 1);
   loop = new Date(newDate);
 }
@@ -38,7 +20,27 @@ function updateEnd(range){
 console.log(range.value);
 document.getElementById("endtime").innerHTML=dat[range.value];
 };
+function tokenfilter(fil){
+var xhr2 = new XMLHttpRequest();
+lab=[];
+dat2=[];
+xhr2.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc2=JSON.parse(this.responseText);
+            for(let i=0;i<spc2.length;i++){
+            if(fil==""){
+               lab.push(spc2[i].Token);
+               dat2.push(spc2[i].Häufigkeit);
+            }
+            }
+            console.log(lab);
 
+       }
+    };
+xhr2.open("GET", "http://localhost:4567/token", true);
+xhr2.send();
+dat=[];
 var ctx = document.getElementById("tokenchart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
@@ -73,3 +75,4 @@ var myLineChart = new Chart(ctx, {
     }
   }
 });
+}
