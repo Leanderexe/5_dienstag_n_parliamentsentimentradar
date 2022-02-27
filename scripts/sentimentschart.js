@@ -1,3 +1,15 @@
+document.getElementById("starttime3").innerHTML=dat[0];
+document.getElementById("endtime3").innerHTML=dat[1577];
+document.getElementById("start3").value=0;
+document.getElementById("end3").value=1577;
+function updateStart3(range){
+console.log(range.value);
+document.getElementById("starttime3").innerHTML=dat[range.value];
+};
+function updateEnd3(range){
+console.log(range.value);
+document.getElementById("endtime3").innerHTML=dat[range.value];
+};
 slab=[];
 sdat=[];
 sbc=[];

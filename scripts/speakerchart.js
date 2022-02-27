@@ -1,3 +1,15 @@
+document.getElementById("starttime5").innerHTML=dat[0];
+document.getElementById("endtime5").innerHTML=dat[1577];
+document.getElementById("start5").value=0;
+document.getElementById("end5").value=1577;
+function updateStart5(range){
+console.log(range.value);
+document.getElementById("starttime5").innerHTML=dat[range.value];
+};
+function updateEnd5(range){
+console.log(range.value);
+document.getElementById("endtime5").innerHTML=dat[range.value];
+};
 rlab=[];
 rdat=[];
 rbc=[];

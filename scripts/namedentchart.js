@@ -1,3 +1,15 @@
+document.getElementById("starttime4").innerHTML=dat[0];
+document.getElementById("endtime4").innerHTML=dat[1577];
+document.getElementById("start4").value=0;
+document.getElementById("end4").value=1577;
+function updateStart4(range){
+console.log(range.value);
+document.getElementById("starttime4").innerHTML=dat[range.value];
+};
+function updateEnd4(range){
+console.log(range.value);
+document.getElementById("endtime4").innerHTML=dat[range.value];
+};
 nlab=[];
 ndat=[];
 nbc=[];

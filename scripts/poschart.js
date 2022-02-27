@@ -1,3 +1,15 @@
+document.getElementById("starttime2").innerHTML=dat[0];
+document.getElementById("endtime2").innerHTML=dat[1577];
+document.getElementById("start2").value=0;
+document.getElementById("end2").value=1577;
+function updateStart2(range){
+console.log(range.value);
+document.getElementById("starttime2").innerHTML=dat[range.value];
+};
+function updateEnd2(range){
+console.log(range.value);
+document.getElementById("endtime2").innerHTML=dat[range.value];
+};
 plab=[];
 pdat=[];
 pbc=[];
