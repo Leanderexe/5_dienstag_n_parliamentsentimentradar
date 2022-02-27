@@ -15,8 +15,19 @@ xhr2.onreadystatechange = function() {
     };
 xhr2.open("GET", "http://localhost:4567/token", true);
 xhr2.send();
+dat=[];
+const start = new Date("10/24/2017");
+const end = new Date("02/18/2022");
 
-dat=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let loop = new Date(start);
+while (loop <= end) {
+  dat.push(loop);
+  console.log(loop);
+  let newDate = loop.setDate(loop.getDate() + 1);
+  loop = new Date(newDate);
+}
+document.getElementById("starttime").innerHTML=dat[789];
+document.getElementById("endtime").innerHTML=dat[789];
 function updateStart(range){
 console.log(range.value);
 document.getElementById("starttime").innerHTML=dat[range.value];
