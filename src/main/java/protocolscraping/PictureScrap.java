@@ -17,18 +17,25 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The class to receive a picture of the desired person from the bundestag webite
+ * @author Manuel Aha
+ */
 public class PictureScrap {
 
 		String parentUrl = "https://bilddatenbank.bundestag.de";
 		URIBuilder ub;
 		//String speakerName;
 
-
+	/**
+	 * Straight forward only this method is necessary for this process
+	 * @param speakerName is the name of the speaker we are looking for
+	 * @return the URL but we can also change the return format easily. Also entire picture information can be extracted which was not necessary for frontend purposes
+	 * @author Manuel Aha
+	 */
 		public URL run(String speakerName) {
 
 			try {
-
 				ub = new URIBuilder(parentUrl + "/search/picture-result");
 				ub.addParameter("query", speakerName);
 				String url = ub.toString();
@@ -47,18 +54,34 @@ public class PictureScrap {
 		}
 }
 
+/**
+ * Since both clasess are for the same pupose both is in the same file
+ * The actual scraping process is in here but initiated by @link{PictureScrap.run()}
+ * @author Manuel Aha
+ */
 class Scarper {
 
 	private String url;
 
+	/**
+	 * constrcuto class with pictureURL
+	 * @param url
+	 * @author Manuel Aha
+	 */
 	public Scarper(String url) {
 		this.url = url;
 	}
 
+	/**
+	 * starts the picture scraping process
+	 * @return
+	 * @auhtor Manuel Aha
+	 */
 	public String init() {
 		String imageURL = null;
 		Document pageSource = getPageSource(url);
 
+		//based on html analysis we need to fetch these infos to receive the URL of the image
 		Elements documents = pageSource.getElementsByClass("item");
 
 		if (!documents.isEmpty()) {
@@ -72,6 +95,12 @@ class Scarper {
 
 	}
 
+	/**
+	 * Determinging basic jsoup configurations
+	 * @param url
+	 * @return
+	 * @author Manuel Aha
+	 */
 	private Document getPageSource(String url) {
 		Document doc = null;
 		try {
@@ -84,20 +113,31 @@ class Scarper {
 		return doc;
 	}
 
+	/**
+	 * Receiving the image by given name
+	 * @param name is the name of the speaker
+	 * @return the URL, but other formats are easily possible from this point
+	 * @throws URISyntaxException
+	 * @author Manuel Aha
+	 */
 	public URL getImageByName(String name) throws URISyntaxException {
 
-
+		//base url part
 		String parentUrl = "https://bilddatenbank.bundestag.de";
+
 		byte[] fileContent = null;
 		try {
 			//fileContent = IOUtils.toByteArray(new URL(parentUrl + name));
 			URL uriella = new URL(parentUrl + name);
-			fileContent = IOUtils.toByteArray(uriella);
-			ByteArrayInputStream inStreambj = new ByteArrayInputStream(fileContent);
-			BufferedImage metaData = ImageIO.read(inStreambj);
-			//ImageIO.write(newImage, "jpg", new File(name ));
-			System.out.println("Image generated from the byte array.");
 
+			//Creation of different data formats are possible here
+
+			//fileContent = IOUtils.toByteArray(uriella);
+			//ByteArrayInputStream inStreambj = new ByteArrayInputStream(fileContent);
+			//BufferedImage metaData = ImageIO.read(inStreambj);
+			//ImageIO.write(newImage, "jpg", new File(name ));
+
+			System.out.println("Image generated from the byte array.");
 
 			return uriella;
 		} catch (MalformedURLException e) {

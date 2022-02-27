@@ -39,20 +39,25 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import scala.Int;
 
+/**
+ * This class fetches the the protocols, converts them to bson.documents, saves those docuents in the database
+ * It also gets the speeches and speakers out of the xml and us initiating the process of getting the image of the speaker
+ * @author Manuel Aha
+ * @modiefied Leander Hermanns
+ */
 public class XmlConversion {
 
     private String url;
     private List<String> searchValue;
     private List Speaker_id;
     private String parentURL = "https://www.bundestag.de";
-
+    public BufferedImage processedImage;
     private final String REDNER_LIST_KEY = "rednerliste";
     private final String REDNER_KEY = "redner";
 
-    public BufferedImage processedImage;
 
+    //Collection Keys
     private final String REDE_COLL_KEY = "speeches";
-
     private final String REDE_ID_KEY = "redeID";
     private final String REDE_SPEAKER_KEY = "rednerID";
     private final String REDE_COMMENTS_KEY = "comments";
@@ -60,17 +65,27 @@ public class XmlConversion {
     private final String REDE_CONTENT_KEY = "content";
 
 
-
-    /*
-    * Identifier for database operation
-    * */
+    /**
+     * Identifier for database operation
+     * @author Manuel Aha
+     */
     private DatabaseOperation databaseOperation;
 
+    /**
+     * identifies the location of the xmls based on the Legislaturperiode
+     * @param url
+     * @param searchValue
+     * @author Manuel Aha
+     */
     public XmlConversion(String url, List<String> searchValue) {
         this.url = url;
         this.searchValue = searchValue;
     }
 
+    /**
+     * initiating the entire fetching xml process with all additional features
+     * @author Manuel Aha
+     */
     public void init() {
 
         databaseOperation = DatabaseOperation.build();
@@ -90,11 +105,12 @@ public class XmlConversion {
         //Here we are getting the xml-URLs by xml-ID
         Map<String, Map<String,String>> datas = parseXmlUrl(endPointIds);
 
-
+        //converting the xml to a document for the database
         xmlToBsonDocument(datas);
 
         /*
         try {
+            //extract the sppeches out of the protocols
             extractSpeech(datas);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -111,17 +127,24 @@ public class XmlConversion {
     }
 
 
-
+    /**
+     * We extracting the xmlID
+     * @param searchValue
+     * @param pageSource
+     * @return the id of the xml
+     * @author Manuel Aha
+     */
     private String getIdByXpath(String searchValue, String pageSource) {
         String id = "";
         XPath xPath = null;
 
+        //path of the xml file we want
         String xpath = "//*[text()='" + searchValue + "']/following::div[contains(@id,\"bt-collapse\")][1]";
 
         xPath = XPathFactory.newInstance().newXPath();
         org.w3c.dom.Document doc = null;
         try {
-
+            //Is cleaning html for a better parsing process
             TagNode tagNode = new HtmlCleaner().clean(pageSource);
             try {
                 doc = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
@@ -129,13 +152,16 @@ public class XmlConversion {
                 e.printStackTrace();
             }
 
+            //to access data from xml
             NodeList nodeList = (NodeList) xPath.evaluate(xpath, doc, XPathConstants.NODESET);
 
+            //if it exists
             if (nodeList.getLength() > 0) {
 
                 Node node = nodeList.item(0);
                 String idValue = node.getAttributes().getNamedItem("id").getNodeValue();
 
+                //String manipulation to receive desired format
                 String[] arr = idValue.split("-");
 
                 id = arr[arr.length - 1];
@@ -148,10 +174,17 @@ public class XmlConversion {
         return id;
     }
 
+    /**
+     * Creating the connecting reference to desired website
+     * @param url is given
+     * @return the page source of html
+     * @author Manuel Aha
+     */
     private String getPageSource(String url) {
         String pageSource = "";
 
         try {
+            //Jsoup connection
             Document doc = Jsoup.connect(url)
                     .userAgent("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0").get();
 
@@ -164,8 +197,15 @@ public class XmlConversion {
         return pageSource;
     }
 
+    /**
+     * Here we get the desired document based on the given xml
+     * @param url is extracted @link{getIdbyXpath}
+     * @return the plenar protocol
+     * @Author MAnuel Aha
+     */
     private Document getDocument(String url) {
         try {
+            //Creating Jsoup connection
             Document doc = Jsoup.connect(url)
                     .userAgent("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0").get();
 
@@ -176,6 +216,7 @@ public class XmlConversion {
         }
         return null;
     }
+
 
     private Map<String, Map<String,String>> parseXmlUrl(List<String> key) {
         int limit = 10;
@@ -201,19 +242,30 @@ public class XmlConversion {
         return data;
     }
 
+    /**
+     * A recusrive iteration of extracting the desired xmls out of the map structure
+     * @param xmlURLs includes the desired xmls
+     * @param limit set to 10 to avoid overwhelming data amounts
+     * @param offset is 0 because we want all xmls
+     * @param key are the endpoints we have identified
+     * @author MAnuel Aha and Leander Hermanns
+     */
     private void recursiveMethodToGetAllXmlURl(Map<String,String> xmlURLs, int limit, int offset, String key) {
 
+        //scraping through the table
         String url = "https://www.bundestag.de/ajax/filterlist/de/services/opendata/" + key + "-" + key + "?limit="
                 + limit + "&noFilterSet=false&offset=" + offset;
 
         Document pageSource = getDocument(url);
 
+        //identified refernece points in the html
         Elements elements = pageSource.getElementsByClass("bt-link-dokument");
         Elements plenarDes = pageSource.getElementsByClass("bt-documents-description");
 
         Integer counter = 0;
 
 
+        //Creating and filling a list of the xmlUrls to extract alter
         for (Element element : elements) {
             String xmlUrl = element.attr("href");
             String plenarName = plenarDes.get(counter).getElementsByTag("strong").text();
@@ -225,47 +277,59 @@ public class XmlConversion {
         }
         offset += limit;
 
+        //if list is full of data we can call this method again assuming there is more
         if (elements.size() == limit) {
             recursiveMethodToGetAllXmlURl(xmlURLs, limit, offset, key);
         }
 
     }
 
+    /**
+     * converts the xml to the bson.document through json transisiton for the database
+     * @param datas
+     * @author Manuel Aha
+     */
     private void xmlToBsonDocument(Map<String, Map<String,String>> datas) {
 
         for (Map.Entry<String, Map<String,String>> data : datas.entrySet()) {
-
             Map<String,String> xmlURL = data.getValue();
 
 
             for (Entry<String, String> string : xmlURL.entrySet()) {
 
+                //Creating xml
                 String xml = getPageSource(parentURL+string.getKey());
                 String name = string.getValue();
 
                 JSONObject json = null;
                 try {
+                    //Creating Json out of the xml
                     json = XML.toJSONObject(xml);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                //and form Json to Bson
                 org.bson.Document doc = org.bson.Document.parse(json.toString());
                 //You can work with this list of docs now
                 createCollectionByDoc(doc);
-               // System.out.println(doc);
-                //System.out.println(name);
+
             }
         }
     }
 
+    /**
+     * Process of inserting the document into the collection and extracting/uploading the speaker
+     * @param document
+     * @Author Manuel Aha
+     * @modifiedby Leander Hermanns
+     */
     private void createCollectionByDoc(org.bson.Document document) {
         if (!databaseOperation.exists(DatabaseOperation.PROTOKOL_KEY)) {
             databaseOperation.createNewCollection(DatabaseOperation.PROTOKOL_KEY);
         }
-        /*
-        * Insert or update protocol in database
-        * */
+
+        // Insert or update protocol in database
         for (Map.Entry<String, Object> e : document.entrySet()) {
                 org.bson.Document document1 = (org.bson.Document) e.getValue();
                 /*
@@ -289,8 +353,6 @@ public class XmlConversion {
             /*
              * Insert speakers in separate collection
              * */
-
-
             Collection<Object> values = document.values();
             values.forEach(o -> {
                 org.bson.Document document1 = (org.bson.Document) o;
@@ -302,7 +364,15 @@ public class XmlConversion {
 
                 data.forEach(d -> {
                     try {
-                        //Alles hier in der try clause
+//
+//                      Alles hier in der try clause kümmert sich um die Sprecher des Protokolls
+//
+//                      Es extrahiert die Sprecher, deren Information und startet das Bild (in diesem Fall die URL, aber andere Formen wären hier auch leicht wählbar) aud dem Internet basierent auf den Namen herunterzuladen
+//
+//                      In dieser Struktur eckt dies mit dem übrigen Projekt an (Nach Duplikaten checken)
+//                      Jedoch funktioniert dieser Code alleine einwandfrei.
+//
+
                         /*
                         //To avoid to be banned from requesting
                         Thread.sleep(1200);
@@ -363,19 +433,26 @@ public class XmlConversion {
         }
     }
 
+    /**
+     * extracting the speeches and its additional information from protocol
+     * @param datas
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws ResourceInitializationException
+     * @author Leander Hermanns
+     * @modified Manuel Aha
+     */
     private void extractSpeech(Map<String, Map<String,String>> datas) throws ParserConfigurationException, IOException, SAXException, ResourceInitializationException {
-        //databaseOperation.deleteCollection("speeches");
+        //for loop for all the xml files we fetched
         for (Map.Entry<String, Map<String,String>> data : datas.entrySet()) {
-
             Map<String, String> xmlURL = data.getValue();
+
 
             for (Entry<String, String> string : xmlURL.entrySet()) {
 
-                System.out.println(string.getKey() + " JOO");
-
                 String xml = getPageSource(parentURL + string.getKey());
 
-                //System.out.println(xml);
 
                 DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
                 fac.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
@@ -388,9 +465,9 @@ public class XmlConversion {
                 NodeList date = doc.getElementsByTagName("datum");
                 String Datum = date.item(0).getTextContent();
 
+                //Starting process of extracting the speeches with its information
                 for (int j = 0;j < tagesOP.getLength(); j++) {
                     List Kommentare_Liste = new ArrayList(); // Holds every comment made.
-                    List rede_id_list = new ArrayList();
                     List Inhalt_Liste = new ArrayList();  // Holds every comment + every speech.
                     StringBuilder Titel = new StringBuilder();
                     List redner_id_list = new ArrayList();
@@ -483,6 +560,7 @@ public class XmlConversion {
                                         speech.printSpeech();
                                         //Speaker_list.add(speech);
 
+                                        //Creating the bson.cdocument from the infromation extracted
                                         org.bson.Document bsonSpeech = new org.bson.Document(REDE_DATE_KEY, Datum);
                                         bsonSpeech.append(REDE_SPEAKER_KEY,redner_id);
                                         bsonSpeech.append(REDE_ID_KEY, rede_id);
@@ -513,8 +591,6 @@ public class XmlConversion {
                         }
 
                 }
-
-                //Will Rede Inhalt, mit Redner, mit Kommentaren, mit Datum der Sitzung, mit id (noch was?) holen und in mongodb speichern
 
 
             }

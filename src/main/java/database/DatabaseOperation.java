@@ -203,6 +203,20 @@ public class DatabaseOperation implements Operation {
     }
 
     /**
+     * counts the number of documents in the given collection
+     * @param collection target
+     * @return the number in String
+     * @author Manuel Aha
+     */
+    @Override
+    public String countDocs(String collection) {
+        long docsNum = mongoDBConnectionHandler.getDatabase().getCollection(collection).countDocuments();
+        String docsNumStr = Long.toString(docsNum);
+
+        return docsNumStr;
+    }
+
+    /**
      * Is showing all existing collections
      * @author Manuel Aha
      */
@@ -241,6 +255,8 @@ public class DatabaseOperation implements Operation {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).deleteOne(Filters.eq(key, value));
         System.out.println(key + " is deleted successfully!");
     }
+
+
 
 
 }
