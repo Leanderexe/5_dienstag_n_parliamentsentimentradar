@@ -27,4 +27,5 @@ butc.style.visibility="hidden";
 function fildash(){
 document.getElementById("dashname").innerHTML=filterval;
 butc.style.visibility="visible";
+tokenfilter(filterval);
 };
