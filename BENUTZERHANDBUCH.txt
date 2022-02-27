@@ -2,9 +2,7 @@ Der Ordner 5_dienstag_1_parliamentsentimentradar muss in IntelliJ geöffnet werd
 sie befindet sich im Ordner startbootstrap-sb-admin-2-gh-pages.Falls die Graphen auf der Website nicht laden sollen,öffnen 
 und schließen Sie bitte kurz die Entwicklerkonsole mit F12.
 
-Anschließend können Sie:Ein bestimmtes Datum oder eine Zeit auswählen,während der die Daten dargestellt werden können.
-Ein bestimmtes Datum können Sie über das Input-Feld ganz oben eingeben und mit dem Knopf "Nach vorgegebenen Daten filtern"
-oder mit Enter bestätigen.
+Eine generische Suchfunktion ist über das Input-Feld ganz oben gegeben.Geben Sie einfach den gewünschten String ein und bestätigen Sie mit Enter oder Knopfdruck.
 
 Einen Zeitraum können Sie unter jedem Graph einzeln über die Range-Slider auswählen,der Graph akualisiert sich dann automatisch.
 

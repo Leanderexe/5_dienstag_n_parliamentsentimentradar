@@ -1,7 +1,10 @@
 var but=document.getElementById("newdash");
 var uindat=document.getElementById("uindat");
-var val;
-but.addEventListener("click",testfornow);
+var filterval;
+butc=document.getElementById("closedash");
+butc.style.visibility="hidden";
+butc.addEventListener("click",backdash);
+but.addEventListener("click",fildash);
 
 $(document).keydown(function ToClick(evn){
     if (evn.keyCode==13) {
@@ -15,8 +18,13 @@ function ToClick(evn){
     }
 };
 function updateVal(title){
-val=title.value
+filterval=title.value
 };
-function testfornow(){
-document.getElementById("dashname").innerHTML=val;
+function backdash(){
+document.getElementById("dashname").innerHTML="Übersicht";
+butc.style.visibility="hidden";
+}
+function fildash(){
+document.getElementById("dashname").innerHTML=filterval;
+butc.style.visibility="visible";
 };
