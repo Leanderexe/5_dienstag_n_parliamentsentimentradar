@@ -26,8 +26,10 @@ while (loop <= end) {
   let newDate = loop.setDate(loop.getDate() + 1);
   loop = new Date(newDate);
 }
-document.getElementById("starttime").innerHTML=dat[789];
-document.getElementById("endtime").innerHTML=dat[789];
+document.getElementById("starttime").innerHTML=dat[0];
+document.getElementById("endtime").innerHTML=dat[1577];
+document.getElementById("start").value=0;
+document.getElementById("end").value=1577;
 function updateStart(range){
 console.log(range.value);
 document.getElementById("starttime").innerHTML=dat[range.value];
