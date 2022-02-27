@@ -1,8 +1,12 @@
 Der Ordner 5_dienstag_1_parliamentsentimentradar muss in IntelliJ geöffnet werden.In IntelliJ öffnen Sie bitte die Datei index.html,
-sie befindet sich im Ordner startbootstrap-sb-admin-2-gh-pages.Außerdem musss die RestApi einmalig ausgeführt werden.Falls die Graphen auf der Website nicht laden sollen,öffnen 
+sie befindet sich im Ordner startbootstrap-sb-admin-2-gh-pages.Außerdem musss die die Main-Methode einmalig ausgeführt werden.Danach 
+sind 4 Optionen verfügbar,diese können durch das Eingeben der entsprechenden Zahl aktiviert werden.
+Für einen reibungslosen Verlauf ist nur das einmalige Drücken der "1" erforderlich.
+Falls die Graphen auf der Website nicht laden sollen,öffnen 
 und schließen Sie bitte kurz die Entwicklerkonsole mit F12.
 
-Eine generische Suchfunktion ist über das Input-Feld ganz oben gegeben.Geben Sie einfach den gewünschten String ein und bestätigen Sie mit Enter oder Knopfdruck.
+Eine generische Suchfunktion ist über das Input-Feld ganz oben gegeben.Geben Sie einfach den gewünschten String ein 
+und bestätigen Sie mit Enter oder Knopfdruck.
 
 Einen Zeitraum können Sie unter jedem Graph einzeln über die Range-Slider auswählen,der Graph akualisiert sich dann automatisch.
 
