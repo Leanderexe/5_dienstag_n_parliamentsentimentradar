@@ -285,29 +285,31 @@ public class XmlConversion {
     }
 
     /**
-     * converts the xml to the bson.document for the database
+     * converts the xml to the bson.document through json transisiton for the database
      * @param datas
-     * @author MAnuel Aha
+     * @author Manuel Aha
      */
     private void xmlToBsonDocument(Map<String, Map<String,String>> datas) {
 
         for (Map.Entry<String, Map<String,String>> data : datas.entrySet()) {
-
             Map<String,String> xmlURL = data.getValue();
 
 
             for (Entry<String, String> string : xmlURL.entrySet()) {
 
+                //Creating xml
                 String xml = getPageSource(parentURL+string.getKey());
                 String name = string.getValue();
 
                 JSONObject json = null;
                 try {
+                    //Creating Json out of the xml
                     json = XML.toJSONObject(xml);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                //and form Json to Bson
                 org.bson.Document doc = org.bson.Document.parse(json.toString());
                 //You can work with this list of docs now
                 createCollectionByDoc(doc);
@@ -320,7 +322,7 @@ public class XmlConversion {
      * Process of inserting the document into the collection and extracting/uploading the speaker
      * @param document
      * @Author Manuel Aha
-     * @modifiedby Leander HErmanns
+     * @modifiedby Leander Hermanns
      */
     private void createCollectionByDoc(org.bson.Document document) {
         if (!databaseOperation.exists(DatabaseOperation.PROTOKOL_KEY)) {
