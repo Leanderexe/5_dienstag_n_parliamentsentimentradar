@@ -32,7 +32,7 @@ public class RestAPI {
     private static JsonUtil util = new JsonUtil();
     static DatabaseOperation db = new DatabaseOperation();
     JSONParser parser = new JSONParser();
-    public static void main(String[] args) throws IOException, JSONException, UIMAException {
+    public static void getAPI() throws IOException, JSONException, UIMAException {
         Pipeline pip = new Pipeline();
         //pip.generatejCAStop(); // generates the JCas objects.
 

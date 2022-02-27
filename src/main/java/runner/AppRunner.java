@@ -9,7 +9,7 @@ import java.util.List;
 
 public class AppRunner {
 
-    public static void main(String[] args) throws IOException {
+    public static void getProtokolls() throws IOException {
         /*
         * Download xml files and store in database in bson form
         * */
