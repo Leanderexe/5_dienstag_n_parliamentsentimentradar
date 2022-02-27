@@ -61,7 +61,7 @@ public class Main {
                     System.out.println("------------------------------------------------------------------------------");
                 } else if (Input.equals("3")) {
                     System.out.println("---------------------- Die JCas Objekte werden erstellt ---------------------");
-                    pip.generatejCAStop(); // generates the JCas objects.
+                    pip.generateJcasTop(); // generates the JCas objects.
                     System.out.println("--------------------------------------------------------------------------");
                 } else if (Input.equals("0")) {
                     System.out.println("Das Programm wurde erfolgreich beendet.");

@@ -49,6 +49,7 @@ public class XmlConversion {
 
     private String url;
     private List<String> searchValue;
+    private List Speaker_id;
     private String parentURL = "https://www.bundestag.de";
     public BufferedImage processedImage;
     private final String REDNER_LIST_KEY = "rednerliste";
@@ -107,6 +108,7 @@ public class XmlConversion {
         //converting the xml to a document for the database
         xmlToBsonDocument(datas);
 
+        /*
         try {
             //extract the sppeches out of the protocols
             extractSpeech(datas);
@@ -119,6 +121,8 @@ public class XmlConversion {
         } catch (ResourceInitializationException e) {
             e.printStackTrace();
         }
+
+         */
 
     }
 
@@ -396,6 +400,18 @@ public class XmlConversion {
                         doc.append(DatabaseOperation.FRAKTION_COL_KEY, fraktion);
                         doc.append(DatabaseOperation.SURNAME_COL_KEY, nachname);
                         doc.append(DatabaseOperation.REDNER_IMAGE, strImg);
+                        /*
+                        int counter = 0;
+                        for(org.bson.Document docrede: databaseOperation.findAllDocument("speeches")) {
+                            System.out.println("hello2");
+                            String rednerid = (String) docrede.get("rednerID");
+                            if (id.equals(rednerid)){
+                                counter += 1;
+                            }
+                        }
+                        doc.append("AnzahlanReden", counter);
+
+                         */
 
 
                         /*
@@ -449,7 +465,6 @@ public class XmlConversion {
 
                 //Starting process of extracting the speeches with its information
                 for (int j = 0;j < tagesOP.getLength(); j++) {
-                    List Speaker_id = new ArrayList();
                     List Kommentare_Liste = new ArrayList(); // Holds every comment made.
                     List Inhalt_Liste = new ArrayList();  // Holds every comment + every speech.
                     StringBuilder Titel = new StringBuilder();
