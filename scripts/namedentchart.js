@@ -2,6 +2,16 @@ nlab=[];
 ndat=[];
 nbc=[];
 nboc=[];
+var xhr51 = new XMLHttpRequest();
+xhr51.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc51=JSON.parse(this.responseText);
+            console.log(spc51);
+            }
+       };
+xhr51.open("GET", "http://localhost:4567/namedentities", true);
+xhr51.send();
 var xhr5 = new XMLHttpRequest();
 xhr5.onreadystatechange = function() {
         console.log(this.status);
