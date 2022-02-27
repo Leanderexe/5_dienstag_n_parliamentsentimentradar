@@ -1,3 +1,45 @@
+document.getElementById("starttime4").innerHTML=dat[0];
+document.getElementById("endtime4").innerHTML=dat[1577];
+document.getElementById("start4").value=0;
+document.getElementById("end4").value=1577;
+function updateStart4(range){
+console.log(range.value);
+document.getElementById("starttime4").innerHTML=dat[range.value];
+};
+function updateEnd4(range){
+console.log(range.value);
+document.getElementById("endtime4").innerHTML=dat[range.value];
+};
+nlab=[];
+ndat=[];
+nbc=[];
+nboc=[];
+var xhr51 = new XMLHttpRequest();
+xhr51.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc51=JSON.parse(this.responseText);
+            console.log(spc51);
+            }
+       };
+xhr51.open("GET", "http://localhost:4567/namedentities", true);
+xhr51.send();
+var xhr5 = new XMLHttpRequest();
+xhr5.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc5=JSON.parse(this.responseText);
+            console.log(spc5);
+            for(let i=0;i<spc5.length;i++){
+                nlab.push(spc5[i].named_entities_object);
+                ndat.push(spc5[i].Häufigkeit);
+                nbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                nboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');
+            }
+       }
+    };
+xhr5.open("GET", "http://localhost:4567/namedentitiesobjects", true);
+xhr5.send();
 var ctx = document.getElementById("namedentchart");
 var neChart = new Chart(ctx, {
   type: 'line',

@@ -1,27 +1,46 @@
+document.getElementById("starttime3").innerHTML=dat[0];
+document.getElementById("endtime3").innerHTML=dat[1577];
+document.getElementById("start3").value=0;
+document.getElementById("end3").value=1577;
+function updateStart3(range){
+console.log(range.value);
+document.getElementById("starttime3").innerHTML=dat[range.value];
+};
+function updateEnd3(range){
+console.log(range.value);
+document.getElementById("endtime3").innerHTML=dat[range.value];
+};
+slab=[];
+sdat=[];
+sbc=[];
+sboc=[];
+var xhr4 = new XMLHttpRequest();
+xhr4.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc4=JSON.parse(this.responseText);
+            console.log(spc4);
+            for(let i=0;i<spc4.length;i++){
+                slab.push(spc4[i].sentiment);
+                sdat.push(spc4[i].Häufigkeit);
+                sbc.push('rgba(42, 202, 0, 0.2)');
+                sboc.push('rgba(42, 202, 0, 1)');
+            }
+
+       }
+    };
+xhr4.open("GET", "http://localhost:4567/sentiment", true);
+xhr4.send();
 var ctx2=document.getElementById("sentimentschart");
 var senChart = new Chart(ctx2, {
      type: 'radar',
      data: {
-         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+         labels: slab,
          datasets: [{
-             label: '# of Votes',
-             data: [12, 19, 3, 5, 3, 3],
-             backgroundColor: [
-                 'rgba(255, 99, 132, 0.2)',
-                 'rgba(54, 162, 235, 0.2)',
-                 'rgba(255, 206, 86, 0.2)',
-                 'rgba(75, 192, 192, 0.2)',
-                 'rgba(153, 102, 255, 0.2)',
-                 'rgba(255, 159, 64, 0.2)'
-             ],
-             borderColor: [
-                 'rgba(255, 99, 132, 1)',
-                 'rgba(54, 162, 235, 1)',
-                 'rgba(255, 206, 86, 1)',
-                 'rgba(75, 192, 192, 1)',
-                 'rgba(153, 102, 255, 1)',
-                 'rgba(255, 159, 64, 1)'
-             ],
+             label: 'Häufigkeit',
+             data: sdat,
+             backgroundColor: sbc,
+             borderColor: sboc,
              borderWidth: 1
          }]
      },

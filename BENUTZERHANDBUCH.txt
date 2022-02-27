@@ -1,0 +1,10 @@
+Der Ordner 5_dienstag_1_parliamentsentimentradar muss in IntelliJ geöffnet werden.In IntelliJ öffnen Sie bitte die Datei index.html,
+sie befindet sich im Ordner startbootstrap-sb-admin-2-gh-pages.Falls die Graphen auf der Website nicht laden sollen,öffnen 
+und schließen Sie bitte kurz die Entwicklerkonsole mit F12.
+
+Eine generische Suchfunktion ist über das Input-Feld ganz oben gegeben.Geben Sie einfach den gewünschten String ein und bestätigen Sie mit Enter oder Knopfdruck.
+
+Einen Zeitraum können Sie unter jedem Graph einzeln über die Range-Slider auswählen,der Graph akualisiert sich dann automatisch.
+
+Ganz unten auf der Seite können Sie nach einer Rede suchen,indem Sie einen beliebigen Text eingeben,es werden nach einem Knopfdruck
+auf "Nach Rede suchen" alle Reden aufgelistet,in denen dieser Text vorkommt.

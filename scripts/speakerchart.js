@@ -1,3 +1,53 @@
+document.getElementById("starttime5").innerHTML=dat[0];
+document.getElementById("endtime5").innerHTML=dat[1577];
+document.getElementById("start5").value=0;
+document.getElementById("end5").value=1577;
+function updateStart5(range){
+console.log(range.value);
+document.getElementById("starttime5").innerHTML=dat[range.value];
+};
+function updateEnd5(range){
+console.log(range.value);
+document.getElementById("endtime5").innerHTML=dat[range.value];
+};
+rlab=[];
+rdat=[];
+rbc=[];
+rboc=[];
+var xhr22 = new XMLHttpRequest();
+xhr22.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc22=JSON.parse(this.responseText);
+            console.log(spc22);
+            for(let i=0;i<spc22.length;i++){
+                /*plab.push(spc5[i].POS);
+                pdat.push(spc5[i].Häufigkeit);
+                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');*/
+            }
+
+       }
+    };
+xhr22.open("GET", "http://localhost:4567/rede", true);
+xhr22.send();
+var xhr6 = new XMLHttpRequest();
+xhr6.onreadystatechange = function() {
+        console.log(this.status);
+        if (this.readyState == 4 && this.status == 200) {
+            var spc6=JSON.parse(this.responseText);
+            console.log(spc6);
+            for(let i=0;i<spc6.length;i++){
+                /*plab.push(spc5[i].POS);
+                pdat.push(spc5[i].Häufigkeit);
+                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');*/
+            }
+
+       }
+    };
+xhr6.open("GET", "http://localhost:4567/redner", true);
+xhr6.send();
 var ctx2=document.getElementById("speakerchart");
 var myChart = new Chart(ctx2, {
      type: 'bar',
