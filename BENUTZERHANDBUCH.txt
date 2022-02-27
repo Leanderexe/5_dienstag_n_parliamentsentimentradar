@@ -3,7 +3,9 @@ sie befindet sich im Ordner startbootstrap-sb-admin-2-gh-pages.Falls die Graphen
 und schließen Sie bitte kurz die Entwicklerkonsole mit F12.
 
 Anschließend können Sie:Ein bestimmtes Datum oder eine Zeit auswählen,während der die Daten dargestellt werden können.
-Ein bestimmtes Datum können Sie über das Input-Feld ganz oben eingeben und mit dem Knopf "Nach vorgegebenen Daten filtern" bestätigen.
+Ein bestimmtes Datum können Sie über das Input-Feld ganz oben eingeben und mit dem Knopf "Nach vorgegebenen Daten filtern"
+oder mit Enter bestätigen.
+
 Einen Zeitraum können Sie unter jedem Graph einzeln über die Range-Slider auswählen,der Graph akualisiert sich dann automatisch.
 
 Ganz unten auf der Seite können Sie nach einer Rede suchen,indem Sie einen beliebigen Text eingeben,es werden nach einem Knopfdruck
