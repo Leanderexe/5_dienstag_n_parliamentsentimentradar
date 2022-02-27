@@ -30,6 +30,8 @@ public interface Operation {
 
     Document findDocumentById(String collection, Integer id);
 
+    String countDocs(String collection);
+
     void printAllCollections();
 
     void deleteCollection(String collection);
