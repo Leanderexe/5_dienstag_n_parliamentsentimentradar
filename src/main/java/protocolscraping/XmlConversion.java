@@ -298,6 +298,7 @@ public class XmlConversion {
 
                 data.forEach(d -> {
                     try {
+                        //Alles hier in der try clause
                         //To avoid to be banned from requesting
                         Thread.sleep(1200);
                         org.bson.Document speakerdoc = (org.bson.Document) d.get("name");
@@ -314,20 +315,6 @@ public class XmlConversion {
 
                         URL speakerImg = picsy.run(name);
 
-                        /*URL urlImage = new URL("");
-                        BufferedImage metaData;
-
-                        speakerImg.keySet().
-                        speakerImg.get()
-
-                        for(URL key : speakerImg.keySet()) {
-                            if (speakerImg.keySet().size() == 1) {
-                                urlImage = key;
-                                metaData = speakerImg.get(key);
-                            }
-
-                        }*/
-
 
                         String strImg = speakerImg.toString();
 
@@ -340,8 +327,6 @@ public class XmlConversion {
                         doc.append(DatabaseOperation.FRAKTION_COL_KEY, fraktion);
                         doc.append(DatabaseOperation.SURNAME_COL_KEY, nachname);
                         doc.append(DatabaseOperation.REDNER_IMAGE, strImg);
-
-
 
 
                         /*
