@@ -2,6 +2,7 @@ package database;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.ListCollectionsIterable;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
@@ -132,6 +133,32 @@ public class DatabaseOperation implements Operation {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).insertOne(document);
         System.out.println("Document inserted successfully in database");
     }
+
+    @Override
+    public boolean documentExists(String collection, Document document) {
+        FindIterable<Document> iterable = mongoDBConnectionHandler.getDatabase().getCollection(collection).find();
+        MongoCursor<Document> cursor = iterable.cursor();
+        while (cursor.hasNext()) {
+            Document document1 = cursor.next();
+
+            try {
+                if (!document.containsKey("_id")) {
+                    document1.remove("_id");
+                }
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            if (document.equals(document1)) {
+                System.out.println("exists");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     /*
      * Find a document by key and value from a collection
      * */

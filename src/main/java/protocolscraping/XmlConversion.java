@@ -256,6 +256,9 @@ public class XmlConversion {
     }
 
     private void createCollectionByDoc(org.bson.Document document) {
+        if (!databaseOperation.exists(DatabaseOperation.PROTOKOL_KEY)) {
+            databaseOperation.createNewCollection(DatabaseOperation.PROTOKOL_KEY);
+        }
         /*
         * Insert or update protocol in database
         * */
@@ -264,7 +267,7 @@ public class XmlConversion {
                 /*
                 * Only insert in db if its protocol
                 * */
-                if (e.getKey().contains(DatabaseOperation.PROTOKOL_KEY)) {
+                if (!databaseOperation.documentExists(DatabaseOperation.PROTOKOL_KEY, document1)) {
                     databaseOperation.insertOneDocument(DatabaseOperation.PROTOKOL_KEY, document1);
                 }
         }
@@ -278,65 +281,20 @@ public class XmlConversion {
             databaseOperation.createNewCollection(REDNER_KEY);
         }
         try {
+
             /*
              * Insert speakers in separate collection
              * */
+
+
             Collection<Object> values = document.values();
             values.forEach(o -> {
                 org.bson.Document document1 = (org.bson.Document) o;
-               // org.bson.Document document2 = (org.bson.Document) o;
 
                 List<org.bson.Document> data = (ArrayList<org.bson.Document>)
                         (((org.bson.Document) ((org.bson.Document)
                                 document1.get(REDNER_LIST_KEY))).get(REDNER_KEY));
 
-               /* org.bson.Document sitzung = (org.bson.Document) document2.get("sitzungsverlauf");
-                List<org.bson.Document> speechData = (ArrayList<org.bson.Document>)  sitzung.get("tagesordnungspunkt");
-
-
-                org.bson.Document vorspann = (org.bson.Document) document1.get("vorspann");
-                org.bson.Document kopfdaten = (org.bson.Document) vorspann.get("kopfdaten");
-                org.bson.Document veranstaltungsdaten = (org.bson.Document) kopfdaten.get("veranstaltungsdaten");
-                org.bson.Document info = (org.bson.Document) veranstaltungsdaten.get("datum");
-                String datum = info.getString("date");
-                System.out.println(datum + " Hallloo");
-
-                //speechData.forEach(s -> {
-
-                //});
-
-                speechData.forEach(sData -> {
-
-                    List<org.bson.Document> speech = (List<org.bson.Document>) sData.get("rede");
-
-                    namecounter = 0;
-                    System.out.println("SPEEEECH" + speech + "HOO");
-                    speech.forEach(s -> {
-                        if (namecounter == 0) {
-                            org.bson.Document name = (org.bson.Document) s.get("name");
-                            org.bson.Document id = (org.bson.Document) s.get("id");
-
-                            System.out.println("HAA" + name + "HOO");
-                            System.out.println("HAA" + id + "HOO");
-
-                            namecounter += 1;
-                        }
-
-                        List<org.bson.Document> p = (List<org.bson.Document>) s.get("p");
-
-                        p.forEach(content -> {
-                            org.bson.Document cPart = (org.bson.Document) content.get("name");
-                            speechcontent = speechcontent + " " + cPart;
-                        });
-
-                    });
-
-
-                    System.out.println("HII" + speech + "HII");
-
-                });
-
-*/
 
                 data.forEach(d -> {
                     try {
@@ -353,8 +311,8 @@ public class XmlConversion {
 
                         PictureScrap picsy = new PictureScrap();
                         String name = vorname + " " + nachname;
-                        System.out.println("JOOJOO" + name);
-                        Map<URL,BufferedImage> speakerImg = picsy.run(name);
+
+                        URL speakerImg = picsy.run(name);
 
                         /*URL urlImage = new URL("");
                         BufferedImage metaData;

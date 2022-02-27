@@ -22,6 +22,8 @@ public interface Operation {
 
     void insertOneDocument(String collection, Document document);
 
+    boolean documentExists(String collection, Document document);
+
     /*
     * Find a document by key and value from a collection
     * */
