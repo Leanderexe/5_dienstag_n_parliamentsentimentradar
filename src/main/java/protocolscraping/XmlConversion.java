@@ -299,6 +299,7 @@ public class XmlConversion {
                 data.forEach(d -> {
                     try {
                         //Alles hier in der try clause
+                        /*
                         //To avoid to be banned from requesting
                         Thread.sleep(1200);
                         org.bson.Document speakerdoc = (org.bson.Document) d.get("name");
@@ -321,7 +322,7 @@ public class XmlConversion {
 
                         /*
                         * Creating custom document for avoid duplicates
-                        * */
+                        * *//*
                         org.bson.Document doc = new org.bson.Document(DatabaseOperation.ID_COL_KEY, id);
                         doc.append(DatabaseOperation.VORNAME_COL_KEY, vorname );
                         doc.append(DatabaseOperation.FRAKTION_COL_KEY, fraktion);
@@ -331,8 +332,8 @@ public class XmlConversion {
 
                         /*
                         * Insert document in database
-                        * */
-                        databaseOperation.insertOneDocument(REDNER_KEY, doc);
+                        * *//*
+                        databaseOperation.insertOneDocument(REDNER_KEY, doc);*/
                     }catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
