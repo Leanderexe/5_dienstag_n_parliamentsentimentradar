@@ -1,6 +1,5 @@
 package NLP;
 
-import com.mongodb.client.MongoCursor;
 import database.DatabaseOperation;
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -35,7 +34,7 @@ public class Pipeline {
      * @author Leander Hermanns
      * @modified Manuel Aha
      */
-    public void generatejCAStop() throws UIMAException {
+    public void generateJcasTop() throws UIMAException {
         AggregateBuilder aggregateBuilder = new AggregateBuilder();
         aggregateBuilder.add(createEngineDescription(SpaCyMultiTagger3.class, SpaCyMultiTagger3.PARAM_REST_ENDPOINT, "http://spacy.prg2021.texttechnologylab.org"));
         aggregateBuilder.add(createEngineDescription(GerVaderSentiment.class, GerVaderSentiment.PARAM_REST_ENDPOINT, "http://gervader.prg2021.texttechnologylab.org" , GerVaderSentiment.PARAM_SELECTION, "text,de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"));
@@ -61,7 +60,7 @@ public class Pipeline {
         }
 
         db.deleteCollection("named entities objects");
-        Map<String, Integer> mapneo = dbrede.printNamedEntitiesobjects(jCasrede);
+        Map<String, Integer> mapneo = dbrede.printNamedEntitiesObjects(jCasrede);
         Map<String, String> mapneobyne = dbrede.printNamedEntitiesByObjects(jCasrede);
         for (String key: mapneo.keySet()){
             org.bson.Document document = new org.bson.Document("namedEntitiesObject", key);

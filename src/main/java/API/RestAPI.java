@@ -31,7 +31,7 @@ import static spark.Spark.*;
 public class RestAPI {
     private static JsonUtil util = new JsonUtil();
     static DatabaseOperation db = new DatabaseOperation();
-    JSONParser parser = new JSONParser();
+
     public static void getAPI() throws IOException, JSONException, UIMAException {
         Pipeline pip = new Pipeline();
         //pip.generatejCAStop(); // generates the JCas objects.
@@ -422,23 +422,6 @@ public class RestAPI {
         }, util.json());
     }
 
-
-
-    /**
-     * Merges a list of keys and a list of value to a Json String.
-     * @return String with Json format
-     * @author Leander Hermanns
-     */
-    private static String getJson(List key, List value) {
-        String json = "";
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        JsonBuilderFactory factory = Json.createBuilderFactory(null);
-        for (int i = 0; i < key.size(); i++) {
-            builder.add((String) key.get(i), (String) value.get(i));
-        }
-        json = builder.build().toString();
-        return json;
-    }
 
 }
 

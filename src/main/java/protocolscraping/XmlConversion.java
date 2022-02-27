@@ -43,6 +43,7 @@ public class XmlConversion {
 
     private String url;
     private List<String> searchValue;
+    private List Speaker_id;
     private String parentURL = "https://www.bundestag.de";
 
     private final String REDNER_LIST_KEY = "rednerliste";
@@ -92,6 +93,7 @@ public class XmlConversion {
 
         xmlToBsonDocument(datas);
 
+        /*
         try {
             extractSpeech(datas);
         } catch (ParserConfigurationException e) {
@@ -103,6 +105,8 @@ public class XmlConversion {
         } catch (ResourceInitializationException e) {
             e.printStackTrace();
         }
+
+         */
 
     }
 
@@ -327,6 +331,18 @@ public class XmlConversion {
                         doc.append(DatabaseOperation.FRAKTION_COL_KEY, fraktion);
                         doc.append(DatabaseOperation.SURNAME_COL_KEY, nachname);
                         doc.append(DatabaseOperation.REDNER_IMAGE, strImg);
+                        /*
+                        int counter = 0;
+                        for(org.bson.Document docrede: databaseOperation.findAllDocument("speeches")) {
+                            System.out.println("hello2");
+                            String rednerid = (String) docrede.get("rednerID");
+                            if (id.equals(rednerid)){
+                                counter += 1;
+                            }
+                        }
+                        doc.append("AnzahlanReden", counter);
+
+                         */
 
 
                         /*
@@ -372,7 +388,6 @@ public class XmlConversion {
                 String Datum = date.item(0).getTextContent();
 
                 for (int j = 0;j < tagesOP.getLength(); j++) {
-                    List Speaker_id = new ArrayList();
                     List Kommentare_Liste = new ArrayList(); // Holds every comment made.
                     List rede_id_list = new ArrayList();
                     List Inhalt_Liste = new ArrayList();  // Holds every comment + every speech.
