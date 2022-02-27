@@ -184,6 +184,27 @@ public class redeMongoDB {
     }
 
     /**
+     * caluates and sorts all used named entities objects by how much they were used and prints it out.
+     * @param jcas_list
+     * @return map with all analysed named entities and the number of appearances.
+     * @author Leander Hermanns
+     */
+    public Map<String, String> printNamedEntitiesByObjects(List<JCas> jcas_list){
+        Map<String, String> map = new HashMap<String, String>();
+        for (int k = 0; k < jcas_list.size(); k++) {
+            for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
+                System.out.println(entity.getCoveredText() + " " + map);
+                if (map.containsKey(entity.getCoveredText())) {
+                    System.out.println(entity.getValue() + " " + entity.getCoveredText());
+                } else {
+                    map.put(entity.getCoveredText(), entity.getValue());
+                }
+            }
+        }
+        return map;
+    }
+
+    /**
      * caluates and sorts all used Part of Speeches by how much they were used and prints it out.
      * @param jcas_list
      * @return map with all analysed POS and the number of appearances.

@@ -36,11 +36,11 @@ public class Pipeline {
      * @modified Manuel Aha
      */
     public void generatejCAStop() throws UIMAException {
-        //db.deleteCollection("named entities");
-        //db.deleteCollection("named entities objects");
-        //db.deleteCollection("token");
-        //db.deleteCollection("POS");
-        //db.deleteCollection("sentiment");
+        db.deleteCollection("named entities");
+        db.deleteCollection("named entities objects");
+        db.deleteCollection("token");
+        db.deleteCollection("POS");
+        db.deleteCollection("sentiment");
         //System.out.println("hier bin ich " );
         //checkForDuplicate("named entities", "LOC" , "named entities");
         AggregateBuilder aggregateBuilder = new AggregateBuilder();
@@ -54,7 +54,7 @@ public class Pipeline {
         Scanner Sitz = new Scanner(System.in);
         System.out.println('\n');
         //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> Geben Sie die Anzahl an Dokumenten, die Sie einlesen wollen, ein (1 - ...). Wenn Sie alle einlesen wollen geben Sie 0 ein.: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        int limit = 200;  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
+        int limit = 10;  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
         int i  = 0;
         for (int k = 0; k < doclist.size(); k++){
             Document doc = (Document) doclist.get(k);
@@ -74,10 +74,12 @@ public class Pipeline {
 
 
         Map<String, Integer> mapneo = dbrede.printNamedEntitiesobjects(jCasrede);
+        Map<String, String> mapneobyne = dbrede.printNamedEntitiesByObjects(jCasrede);
         //System.out.println("hello wo ist die map" + mapneo);
         for (String key: mapneo.keySet()){
-            org.bson.Document document = new org.bson.Document("named entities object", key);
-            document.append("Häufigkeit",mapneo.get(key));
+            org.bson.Document document = new org.bson.Document("namedEntitiesObject", key);
+            document.append("Häufigkeit", mapneo.get(key));
+            document.append("LPO", mapneobyne.get(key));
             System.out.println(document);
             db.insertOneDocument("named entities objects", document);
         }

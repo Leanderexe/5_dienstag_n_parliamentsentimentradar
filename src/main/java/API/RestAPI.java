@@ -252,6 +252,23 @@ public class RestAPI {
             return rednerlist;
         }, util.json());
 
+        /**
+         * Prints out JSON with all named entities which contain the search parameter at http://localhost:4567/namedentitiesobjects/LPO/:searchstr
+         * @return String with all named entities which contain the search parameter in JSON.
+         * @author Leander Hermanns
+         */
+        get("/namedentitiesobjects/LPO/:searchstr", (request, response) -> {
+            String searchstr = request.params(":searchstr");
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("named entities objects")){
+                String lpo =  (String) doc.get("LPO");
+                if (lpo.contains(searchstr)){
+                    rednerlist.add(doc);
+                }
+            }
+            return rednerlist;
+        }, util.json());
+
 
         /**
          * Prints out JSON with all named entities objects at http://localhost:4567/namedentitiesobjects
@@ -276,7 +293,7 @@ public class RestAPI {
             String searchstr = request.params(":searchstr");
             List rednerlist = new ArrayList();
             for(Document doc: db.findAllDocument("named entities objects")){
-                String sentiment =  (String) doc.get("named entities object");
+                String sentiment =  (String) doc.get("namedEntitiesObject");
                 if (sentiment.contains(searchstr)){
                     rednerlist.add(doc);
                 }
