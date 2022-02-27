@@ -39,7 +39,7 @@ public class Main {
         while (Valid) {
             try {
                 TimeUnit.SECONDS.sleep(1);
-                System.out.println('\n' + "Geben Sie die Nummer der Aufgabe ein (0-18):" + '\n' +
+                System.out.println('\n' + "Geben Sie die Nummer der Aufgabe ein (0-3):" + '\n' +
                         "[1]: Aufsetzten der API Verbindung" + '\n' +
                         "[2]: Redner, Reden und Protokolle in die Datenbank lesen" + '\n' +
                         "[3]: POS, named entities, token und sentiments in die Datenbank einlesen" + '\n' +
@@ -48,7 +48,7 @@ public class Main {
                 // Checks if the Input is a valid number.
                 if (valid_input.contains(Integer.parseInt(Input))) {
                 } else {
-                    System.out.println(">>>>>>>>>>Das hat nicht geklappt! Bitte geben Sie eine Nummer zwischen 0 und 18 ein.<<<<<<<<<<" + '\n');
+                    System.out.println(">>>>>>>>>>Das hat nicht geklappt! Bitte geben Sie eine Nummer zwischen 0 und 3 ein.<<<<<<<<<<" + '\n');
                 }
 
                 if (Input.equals("1")) {
