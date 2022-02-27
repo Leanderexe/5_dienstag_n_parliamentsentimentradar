@@ -111,9 +111,12 @@ public class MongoDBConnectionHandler {
 
         return "mongodb://" + remoteUser + ":" + remotePassword + "@" + remoteName + ":" + remotePort + "/" + remoteDatabase;
     }
-    /*
+
+    /**
      * Get remote MongoDB database
-     * */
+     * @return the mongo database
+     * @author Manuel Aha
+     */
     public MongoDatabase getDatabase() {
 
         if (mongoDatabase == null) {
@@ -122,9 +125,11 @@ public class MongoDBConnectionHandler {
         return mongoDatabase;
     }
 
-    /*
+    /**
      * Get remote MongoDB collection
-     * */
+     * @return
+     * @author Manuel Aha
+     */
     public MongoCollection<Document> getCollection() {
         if (mongoCollection == null) {
             mongoCollection = getDatabase().getCollection(remoteCollectionValue);
@@ -132,18 +137,26 @@ public class MongoDBConnectionHandler {
         return mongoCollection;
     }
 
-    /*
+    /**
      * Create MongoDB client
-     * */
+     * @return if not already existing create and return the client
+     * @author Manuel Aha
+     */
     public MongoClient mongoClient(){
         if (clientWithURI == null) {
             clientWithURI = new MongoClient(new MongoClientURI(dbCredentials()));
         }
         MongoCredential credential = MongoCredential.createCredential("xyz", "admin", "password".toCharArray());
-        MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 1235), Arrays.asList(credential), MongoClientOptions.builder().build());
+        //is depreciated
+        //MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 1235), Arrays.asList(credential), MongoClientOptions.builder().build());
         return clientWithURI;
     }
 
+    /**
+     * I dont know for what reason I have implemented this
+     * @return
+     * @author Manuel Aha
+     */
     public String remoteCollection() {
         if (StringUtils.isEmpty(remoteCollectionValue)) {
             throw new NullPointerException("Remote collection value is empty");
@@ -151,6 +164,11 @@ public class MongoDBConnectionHandler {
         return remoteCollectionValue;
     }
 
+    /**
+     * return the database
+     * @return the database we work with
+     * @author Manuel Aha
+     */
     public String remoteDatabase() {
         return remoteDatabaseValue;
     }

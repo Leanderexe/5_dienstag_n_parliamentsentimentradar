@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
 * Interface for Mongo database operations
+ * I think the standard is to comment methods in interface instead of the actual class. This will be not the case
+ * in this project
 * @author Manuel Aha
 */
 public interface Operation {
@@ -24,14 +26,8 @@ public interface Operation {
 
     boolean documentExists(String collection, Document document);
 
-    /*
-    * Find a document by key and value from a collection
-    * */
     Document findDocument(String collection, String key, String value);
 
-    /*
-    * Find a document by document id from a collection
-    * */
     Document findDocumentById(String collection, Integer id);
 
     void printAllCollections();
