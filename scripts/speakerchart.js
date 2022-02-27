@@ -14,23 +14,7 @@ rlab=[];
 rdat=[];
 rbc=[];
 rboc=[];
-var xhr22 = new XMLHttpRequest();
-xhr22.onreadystatechange = function() {
-        console.log(this.status);
-        if (this.readyState == 4 && this.status == 200) {
-            var spc22=JSON.parse(this.responseText);
-            console.log(spc22);
-            for(let i=0;i<spc22.length;i++){
-                /*plab.push(spc5[i].POS);
-                pdat.push(spc5[i].Häufigkeit);
-                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
-                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');*/
-            }
 
-       }
-    };
-xhr22.open("GET", "http://localhost:4567/rede", true);
-xhr22.send();
 var xhr6 = new XMLHttpRequest();
 xhr6.onreadystatechange = function() {
         console.log(this.status);
