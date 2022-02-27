@@ -19,12 +19,11 @@ xhr5.onreadystatechange = function() {
             var spc5=JSON.parse(this.responseText);
             console.log(spc5);
             for(let i=0;i<spc5.length;i++){
-                nlab.push(spc5[i].POS);
+                nlab.push(spc5[i].named_entities_object);
                 ndat.push(spc5[i].Häufigkeit);
                 nbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
                 nboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');
             }
-
        }
     };
 xhr5.open("GET", "http://localhost:4567/namedentitiesobjects", true);
