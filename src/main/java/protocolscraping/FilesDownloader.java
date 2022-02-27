@@ -24,37 +24,41 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * This class is not used
+ *
+ *
+ */
 public class FilesDownloader {
+
+
     private static FilesDownloader instance;
-
     private static final String FILE_PATH = "./src/main/resources/blob/information.xml";
-
     private Operation operation = DatabaseOperation.build();
-
     final String url = "https://www.bundestag.de/ajax/filterlist/de/services/opendata/866354-866354";
 
-    /*
+    /**
     * Restrict the creation of files downloader object direclty
+     * @author Manuel Aha
     * */
     private FilesDownloader() {
     }
 
+    /**
+     * Identifiying the table part and extract the html element
+     * @return
+     * @throws IOException
+     * @author Manuel Aha
+     */
     private Elements getTable() throws IOException {
         final org.jsoup.nodes.Document document = (org.jsoup.nodes.Document) Jsoup.connect(url).get();
 
         return document.getElementsByClass("bt-link-dokument");
     }
 
-    private void createRednerCollection() {
-        /*
-         * Check if collection already exists or not
-         * */
-        if (!operation.exists(DatabaseOperation.REDNER_KEY)) {
-            operation.createNewCollection(DatabaseOperation.REDNER_KEY);
-        }
-    }
-    /*
-    * Create instance of FilesDownloader
+    /**
+    * Create instance of FilesDownloader and return
+     * @author Manuel Aha
     * */
     public static FilesDownloader build() {
         if (instance == null) {
@@ -63,6 +67,14 @@ public class FilesDownloader {
         return instance;
     }
 
+    /**
+     * String manipulation not used anymore
+     * @param str
+     * @param index
+     * @param replace
+     * @return
+     * @author Manuel Aha
+     */
     public String replace(String str, int index, char replace){
         if(str==null){
             return str;
@@ -73,6 +85,12 @@ public class FilesDownloader {
         chars[index] = replace;
         return String.valueOf(chars);
     }
+
+    /**
+     *
+     * @param doc
+     * @return
+     */
     private Document getBson(String doc) {
         JSONObject json = null;
         try {
@@ -89,6 +107,7 @@ public class FilesDownloader {
         return new String(encoded, StandardCharsets.US_ASCII);
     }
 
+    //First version and attempts which might hold still important information
     public void downloadAndSaveTheFilesContentInDbInBson() throws IOException {
         for (Element link : getTable()) {
             try {
