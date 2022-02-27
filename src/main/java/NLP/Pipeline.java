@@ -54,7 +54,7 @@ public class Pipeline {
         Scanner Sitz = new Scanner(System.in);
         System.out.println('\n');
         //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> Geben Sie die Anzahl an Dokumenten, die Sie einlesen wollen, ein (1 - ...). Wenn Sie alle einlesen wollen geben Sie 0 ein.: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        int limit = 10;  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
+        int limit = 200;  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
         int i  = 0;
         for (int k = 0; k < doclist.size(); k++){
             Document doc = (Document) doclist.get(k);

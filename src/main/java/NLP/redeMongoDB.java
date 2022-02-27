@@ -184,9 +184,9 @@ public class redeMongoDB {
     }
 
     /**
-     * caluates and sorts all used named entities objects by how much they were used and prints it out.
+     * caluates and sorts all used named entities objects by their LPO and prints it out.
      * @param jcas_list
-     * @return map with all analysed named entities and the number of appearances.
+     * @return map with all analysed named entities and the by their LPO.
      * @author Leander Hermanns
      */
     public Map<String, String> printNamedEntitiesByObjects(List<JCas> jcas_list){

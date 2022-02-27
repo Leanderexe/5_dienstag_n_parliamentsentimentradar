@@ -15,7 +15,9 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 //import org.w3c.dom.Document;
 
 
@@ -88,6 +90,36 @@ public class RestAPI {
             return rednerlist;
         }, util.json());
 
+
+        /**
+         * Prints out JSON with all speaker by their name which contain the search parameter at http://localhost:4567/redner/rede
+         * @return String with all speaker which contain the search parameter in JSON.
+         * @author Leander Hermanns
+         */
+        get("/redner/rede", (request, response) -> {
+            //String searchstr = request.params(":searchstr");
+            List rednerlist = new ArrayList();
+            System.out.println("hello");
+            Map<String, Integer> map = new HashMap<String, Integer>();
+            for(Document doc: db.findAllDocument("redner")) {
+                map.put((String) doc.get("_id"), 0);
+            }
+            for(Document docrede: db.findAllDocument("speeches")) {
+                System.out.println("hello2");
+                String rednerid = (String) docrede.get("rednerID");
+                if (map.containsKey(rednerid)) {
+                    map.replace(rednerid, map.get(rednerid), map.get(rednerid) + 1);
+                }
+            }
+            for(Document doc: db.findAllDocument("redner")) {
+                System.out.println(map);
+                if (map.containsKey((String) doc.get("_id"))){
+                    doc.append("AnzahlanReden", map.get("_id"));
+                    rednerlist.add(doc);
+                }
+            }
+            return rednerlist;
+        }, util.json());
 
         /**
          * Prints out JSON with all speaker whose id matches the search parameter at http://localhost:4567/redner/id/:searchstr
@@ -355,6 +387,37 @@ public class RestAPI {
                         break;
                     }
                 }
+            return rednerlist;
+        }, util.json());
+
+        /**
+         * Prints out JSON with a speech whose id matches the search parameter at http://localhost:4567/rede/rednerid/:searchstr
+         * @return String with a speech which contain the search parameter in JSON.
+         * @author Leander Hermanns
+         */
+        get("/rede/rednerid/:searchstr", (request, response) -> {
+            String searchstr = request.params(":searchstr");
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("speeches")){
+                String redeID =  (String) doc.get("rednerID");
+                if (redeID.contains(searchstr)) {
+                    rednerlist.add(doc);
+                    break;
+                }
+            }
+            return rednerlist;
+        }, util.json());
+
+        /**
+         * Prints out JSON with all rendner at http://localhost:4567/protokoll
+         * @return String with the all Redner in JSON.
+         * @author Leander Hermanns
+         */
+        get("/protokoll", (request, response) -> {
+            List rednerlist = new ArrayList();
+            for(Document doc: db.findAllDocument("dbtplenarprotokoll")){
+                rednerlist.add(doc);
+            }
             return rednerlist;
         }, util.json());
     }
