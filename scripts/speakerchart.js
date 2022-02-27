@@ -14,6 +14,7 @@ rlab=[];
 rdat=[];
 rbc=[];
 rboc=[];
+
 var xhr6 = new XMLHttpRequest();
 xhr6.onreadystatechange = function() {
         console.log(this.status);
@@ -21,16 +22,10 @@ xhr6.onreadystatechange = function() {
             var spc6=JSON.parse(this.responseText);
             console.log(spc6);
             for(let i=0;i<spc6.length;i++){
-              /*var xhr61 = new XMLHttpRequest();
-              xhr61.onreadystatechange = function() {
-                      console.log(this.status);
-                      if (this.readyState == 4 && this.status == 200) {
-                          var spc61=JSON.parse(this.responseText);
-                          console.log(spc61);
-                     }
-                  };
-              xhr61.open("GET", "http://localhost:4567/rede/rednerid/"+spc6._id, true);
-              xhr61.send();*/
+                /*plab.push(spc5[i].POS);
+                pdat.push(spc5[i].Häufigkeit);
+                pbc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 0.2)');
+                pboc.push('rgba('+(42+i)%255+', '+(i)%255+', '+(202+i)%255+' 1)');*/
             }
 
        }

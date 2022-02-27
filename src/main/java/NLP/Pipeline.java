@@ -1,6 +1,5 @@
 package NLP;
 
-import com.mongodb.client.MongoCursor;
 import database.DatabaseOperation;
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -35,26 +34,16 @@ public class Pipeline {
      * @author Leander Hermanns
      * @modified Manuel Aha
      */
-    public void generatejCAStop() throws UIMAException {
-        db.deleteCollection("named entities");
-        db.deleteCollection("named entities objects");
-        db.deleteCollection("token");
-        db.deleteCollection("POS");
-        db.deleteCollection("sentiment");
-        //System.out.println("hier bin ich " );
-        //checkForDuplicate("named entities", "LOC" , "named entities");
+    public void generateJcasTop() throws UIMAException {
         AggregateBuilder aggregateBuilder = new AggregateBuilder();
         aggregateBuilder.add(createEngineDescription(SpaCyMultiTagger3.class, SpaCyMultiTagger3.PARAM_REST_ENDPOINT, "http://spacy.prg2021.texttechnologylab.org"));
         aggregateBuilder.add(createEngineDescription(GerVaderSentiment.class, GerVaderSentiment.PARAM_REST_ENDPOINT, "http://gervader.prg2021.texttechnologylab.org" , GerVaderSentiment.PARAM_SELECTION, "text,de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"));
         AnalysisEngine pipeline = aggregateBuilder.createAggregate();
-        //org.bson.Document doc = null;
         List doclist = db.findAllDocument("speeches");
-        //MongoCursor<Document> cursor = db.getDocumentSpeech().iterator();
-        //System.out.println(cursor);
         Scanner Sitz = new Scanner(System.in);
         System.out.println('\n');
-        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> Geben Sie die Anzahl an Dokumenten, die Sie einlesen wollen, ein (1 - ...). Wenn Sie alle einlesen wollen geben Sie 0 ein.: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        int limit = 200;  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>> Geben Sie die Anzahl an Dokumenten, die Sie einlesen wollen, ein (1 - ...). Wenn Sie alle einlesen wollen geben Sie 0 ein.: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        int limit = Integer.parseInt(Sitz.nextLine());  // Set the Number of documents that will be analysed. If not set program will take hours to calculate.
         int i  = 0;
         for (int k = 0; k < doclist.size(); k++){
             Document doc = (Document) doclist.get(k);
@@ -64,18 +53,15 @@ public class Pipeline {
             dbrede = new redeMongoDB(doc);
             JCas jcas = dbrede.toCAS();
             jCasrede.add(jcas);
-            //System.out.println("hier bin ich" + jCasrede);
             dbrede.buildPipeline(jcas,pipeline);
             if (i == limit){
-                //jCasrede.clear();
                 break;
             }
         }
 
-
-        Map<String, Integer> mapneo = dbrede.printNamedEntitiesobjects(jCasrede);
+        db.deleteCollection("named entities objects");
+        Map<String, Integer> mapneo = dbrede.printNamedEntitiesObjects(jCasrede);
         Map<String, String> mapneobyne = dbrede.printNamedEntitiesByObjects(jCasrede);
-        //System.out.println("hello wo ist die map" + mapneo);
         for (String key: mapneo.keySet()){
             org.bson.Document document = new org.bson.Document("namedEntitiesObject", key);
             document.append("Häufigkeit", mapneo.get(key));
@@ -84,8 +70,8 @@ public class Pipeline {
             db.insertOneDocument("named entities objects", document);
         }
 
+        db.deleteCollection("named entities");
         Map<String, Integer> mapne = dbrede.printNamedEntities(jCasrede);
-        //System.out.println("hello wo ist die map" + mapne);
         for (String key: mapne.keySet()){
             org.bson.Document document = new org.bson.Document("named entities", key);
             document.append("Häufigkeit",mapne.get(key));
@@ -93,9 +79,8 @@ public class Pipeline {
             db.insertOneDocument("named entities", document);
         }
 
-
+        db.deleteCollection("token");
         Map<String, Integer> maptoken = dbrede.printToken(jCasrede);
-        //System.out.println("hello wo ist die map" + maptoken);
         for (String key: maptoken.keySet()){
             org.bson.Document document = new org.bson.Document("Token", key);
             document.append("Häufigkeit",maptoken.get(key));
@@ -103,9 +88,8 @@ public class Pipeline {
             db.insertOneDocument("token", document);
         }
 
-        //db.createNewCollection("POS");
+        db.deleteCollection("POS");
         Map<String, Integer> mappos = dbrede.printPos(jCasrede);
-        //System.out.println("hello wo ist die map" + mappos);
         for (String key: mappos.keySet()){
             org.bson.Document document = new org.bson.Document("POS", key);
             document.append("Häufigkeit",mappos.get(key));
@@ -113,8 +97,8 @@ public class Pipeline {
             db.insertOneDocument("POS", document);
         }
 
+        db.deleteCollection("sentiment");
         Map<Double, Integer> mapsentiment = dbrede.printSentiment(jCasrede);
-        //System.out.println("hello wo ist die map" + mapsentiment);
         for (double key: mapsentiment.keySet()){
             org.bson.Document document = new org.bson.Document("sentiment", key);
             document.append("Häufigkeit",mapsentiment.get(key));

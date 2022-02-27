@@ -43,6 +43,7 @@ public class XmlConversion {
 
     private String url;
     private List<String> searchValue;
+    private List Speaker_id;
     private String parentURL = "https://www.bundestag.de";
 
     private final String REDNER_LIST_KEY = "rednerliste";
@@ -92,6 +93,7 @@ public class XmlConversion {
 
         xmlToBsonDocument(datas);
 
+        /*
         try {
             extractSpeech(datas);
         } catch (ParserConfigurationException e) {
@@ -103,6 +105,8 @@ public class XmlConversion {
         } catch (ResourceInitializationException e) {
             e.printStackTrace();
         }
+
+         */
 
     }
 
@@ -256,6 +260,9 @@ public class XmlConversion {
     }
 
     private void createCollectionByDoc(org.bson.Document document) {
+        if (!databaseOperation.exists(DatabaseOperation.PROTOKOL_KEY)) {
+            databaseOperation.createNewCollection(DatabaseOperation.PROTOKOL_KEY);
+        }
         /*
         * Insert or update protocol in database
         * */
@@ -264,7 +271,7 @@ public class XmlConversion {
                 /*
                 * Only insert in db if its protocol
                 * */
-                if (e.getKey().contains(DatabaseOperation.PROTOKOL_KEY)) {
+                if (!databaseOperation.documentExists(DatabaseOperation.PROTOKOL_KEY, document1)) {
                     databaseOperation.insertOneDocument(DatabaseOperation.PROTOKOL_KEY, document1);
                 }
         }
@@ -278,68 +285,25 @@ public class XmlConversion {
             databaseOperation.createNewCollection(REDNER_KEY);
         }
         try {
+
             /*
              * Insert speakers in separate collection
              * */
+
+
             Collection<Object> values = document.values();
             values.forEach(o -> {
                 org.bson.Document document1 = (org.bson.Document) o;
-               // org.bson.Document document2 = (org.bson.Document) o;
 
                 List<org.bson.Document> data = (ArrayList<org.bson.Document>)
                         (((org.bson.Document) ((org.bson.Document)
                                 document1.get(REDNER_LIST_KEY))).get(REDNER_KEY));
 
-               /* org.bson.Document sitzung = (org.bson.Document) document2.get("sitzungsverlauf");
-                List<org.bson.Document> speechData = (ArrayList<org.bson.Document>)  sitzung.get("tagesordnungspunkt");
-
-
-                org.bson.Document vorspann = (org.bson.Document) document1.get("vorspann");
-                org.bson.Document kopfdaten = (org.bson.Document) vorspann.get("kopfdaten");
-                org.bson.Document veranstaltungsdaten = (org.bson.Document) kopfdaten.get("veranstaltungsdaten");
-                org.bson.Document info = (org.bson.Document) veranstaltungsdaten.get("datum");
-                String datum = info.getString("date");
-                System.out.println(datum + " Hallloo");
-
-                //speechData.forEach(s -> {
-
-                //});
-
-                speechData.forEach(sData -> {
-
-                    List<org.bson.Document> speech = (List<org.bson.Document>) sData.get("rede");
-
-                    namecounter = 0;
-                    System.out.println("SPEEEECH" + speech + "HOO");
-                    speech.forEach(s -> {
-                        if (namecounter == 0) {
-                            org.bson.Document name = (org.bson.Document) s.get("name");
-                            org.bson.Document id = (org.bson.Document) s.get("id");
-
-                            System.out.println("HAA" + name + "HOO");
-                            System.out.println("HAA" + id + "HOO");
-
-                            namecounter += 1;
-                        }
-
-                        List<org.bson.Document> p = (List<org.bson.Document>) s.get("p");
-
-                        p.forEach(content -> {
-                            org.bson.Document cPart = (org.bson.Document) content.get("name");
-                            speechcontent = speechcontent + " " + cPart;
-                        });
-
-                    });
-
-
-                    System.out.println("HII" + speech + "HII");
-
-                });
-
-*/
 
                 data.forEach(d -> {
                     try {
+                        //Alles hier in der try clause
+                        /*
                         //To avoid to be banned from requesting
                         Thread.sleep(1200);
                         org.bson.Document speakerdoc = (org.bson.Document) d.get("name");
@@ -353,22 +317,8 @@ public class XmlConversion {
 
                         PictureScrap picsy = new PictureScrap();
                         String name = vorname + " " + nachname;
-                        System.out.println("JOOJOO" + name);
-                        Map<URL,BufferedImage> speakerImg = picsy.run(name);
 
-                        /*URL urlImage = new URL("");
-                        BufferedImage metaData;
-
-                        speakerImg.keySet().
-                        speakerImg.get()
-
-                        for(URL key : speakerImg.keySet()) {
-                            if (speakerImg.keySet().size() == 1) {
-                                urlImage = key;
-                                metaData = speakerImg.get(key);
-                            }
-
-                        }*/
+                        URL speakerImg = picsy.run(name);
 
 
                         String strImg = speakerImg.toString();
@@ -376,20 +326,30 @@ public class XmlConversion {
 
                         /*
                         * Creating custom document for avoid duplicates
-                        * */
+                        * *//*
                         org.bson.Document doc = new org.bson.Document(DatabaseOperation.ID_COL_KEY, id);
                         doc.append(DatabaseOperation.VORNAME_COL_KEY, vorname );
                         doc.append(DatabaseOperation.FRAKTION_COL_KEY, fraktion);
                         doc.append(DatabaseOperation.SURNAME_COL_KEY, nachname);
                         doc.append(DatabaseOperation.REDNER_IMAGE, strImg);
+                        /*
+                        int counter = 0;
+                        for(org.bson.Document docrede: databaseOperation.findAllDocument("speeches")) {
+                            System.out.println("hello2");
+                            String rednerid = (String) docrede.get("rednerID");
+                            if (id.equals(rednerid)){
+                                counter += 1;
+                            }
+                        }
+                        doc.append("AnzahlanReden", counter);
 
-
+                         */
 
 
                         /*
                         * Insert document in database
-                        * */
-                        databaseOperation.insertOneDocument(REDNER_KEY, doc);
+                        * *//*
+                        databaseOperation.insertOneDocument(REDNER_KEY, doc);*/
                     }catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -429,7 +389,6 @@ public class XmlConversion {
                 String Datum = date.item(0).getTextContent();
 
                 for (int j = 0;j < tagesOP.getLength(); j++) {
-                    List Speaker_id = new ArrayList();
                     List Kommentare_Liste = new ArrayList(); // Holds every comment made.
                     List rede_id_list = new ArrayList();
                     List Inhalt_Liste = new ArrayList();  // Holds every comment + every speech.

@@ -2,6 +2,7 @@ package database;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.ListCollectionsIterable;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
@@ -121,30 +122,90 @@ public class DatabaseOperation implements Operation {
         return mongoDBConnectionHandler.getDatabase().getCollection("speeches").find();
     }
 
+    /**
+     * Inserts a list of documents in a database collection
+     * @param collectionName specifies which collection will be targeted
+     * @param docList includes the docs
+     * @author Manuel Aha
+     */
     @Override
     public void insertAll(String collectionName, List<Document> docList) {
         mongoDBConnectionHandler.getDatabase().getCollection(collectionName).insertMany(docList);
         System.out.println("Documents inserted successfully in database");
     }
 
+    /**
+     * Inserts only a single document in database collection
+     * @param collection specifies which collection will be targeted
+     * @param document
+     * @author Manuel Aha
+     */
     @Override
     public void insertOneDocument(String collection, Document document) {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).insertOne(document);
         System.out.println("Document inserted successfully in database");
     }
-    /*
-     * Find a document by key and value from a collection
-     * */
+
+    /**
+     * Checks if the document already exists in the collection
+     * @param collection specifies which collection will be targeted
+     * @param document is either duplicate or does not exist in database
+     * @return true if document exists
+     * @author Manuel Aha
+     */
+    @Override
+    public boolean documentExists(String collection, Document document) {
+        FindIterable<Document> iterable = mongoDBConnectionHandler.getDatabase().getCollection(collection).find();
+        MongoCursor<Document> cursor = iterable.cursor();
+        while (cursor.hasNext()) {
+            Document document1 = cursor.next();
+
+            try {
+                if (!document.containsKey("_id")) {
+                    document1.remove("_id");
+                }
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            if (document.equals(document1)) {
+                System.out.println("exists");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Find a document by key  from a collection
+     * @param collection
+     * @param key
+     * @param value
+     * @return the desired document
+     * @author Manuel Aha
+     */
     @Override
     public Document findDocument(String collection, String key, String value) {
         return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(key, value)).first();
     }
 
+    /**
+     * Find a document by id from a collection
+     * @param collection
+     * @param id
+     * @return the desired document
+     * @author Manuel Aha
+     */
     @Override
     public Document findDocumentById(String collection, Integer id) {
         return mongoDBConnectionHandler.getDatabase().getCollection(collection).find(eq(ID_COL_KEY, id)).first();
     }
 
+    /**
+     * Is showing all existing collections
+     * @author Manuel Aha
+     */
     @Override
     public void printAllCollections() {
 
@@ -157,12 +218,24 @@ public class DatabaseOperation implements Operation {
         }
     }
 
+    /**
+     * Deletes an entire collection
+     * @param collection will be gone
+     * @author Manuel Aha
+     */
     @Override
     public void deleteCollection(String collection) {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).drop();
         System.out.println(collection + " deleted successfully!");
     }
 
+    /**
+     * Deletes a single document from given collection
+     * @param collection target collection
+     * @param key to identfy the document to be deleted
+     * @param value
+     * @author Manuel Aha
+     */
     @Override
     public void deleteDocument(String collection, String key, String value) {
         mongoDBConnectionHandler.getDatabase().getCollection(collection).deleteOne(Filters.eq(key, value));

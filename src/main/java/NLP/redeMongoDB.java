@@ -167,7 +167,7 @@ public class redeMongoDB {
      * @return map with all analysed named entities and the number of appearances.
      * @author Leander Hermanns
      */
-    public Map<String, Integer> printNamedEntitiesobjects(List<JCas> jcas_list){
+    public Map<String, Integer> printNamedEntitiesObjects(List<JCas> jcas_list){
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int k = 0; k < jcas_list.size(); k++) {
             for (NamedEntity entity : JCasUtil.select(jcas_list.get(k), NamedEntity.class)) {
